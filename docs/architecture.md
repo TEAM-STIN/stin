@@ -20,6 +20,9 @@
 
 ## 왜 이렇게 결정했나
 
+### 왜 schema.prisma에 datasource url을 안 쓰고 prisma.config.ts로 분리했는가
+Prisma 7부터 `datasource.url`을 schema.prisma에 직접 쓰는 방식이 제거되어, DB 연결 문자열은 `apps/api/prisma.config.ts`(CLI용)와 런타임의 `@prisma/adapter-pg` 어댑터(NestJS 코드용)로 옮겨야 한다. `apps/api/.env`의 `DATABASE_URL`은 그대로 두 곳에서 공유해서 읽는다.
+
 <!-- 결정마다 한 항목씩 추가. 예:
 
 ### 왜 성분 병용 규칙을 개별 성분이 아닌 기능군 단위로 뒀는가
