@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: stin-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: stin
+      POSTGRES_PASSWORD: stin_dev_password
+      POSTGRES_DB: stin
+    ports:
+      - "5432:5432"
+    volumes:
+      - stin_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stin -d stin"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  stin_postgres_data:
