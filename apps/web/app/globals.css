@@ -1,26 +1,125 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  STIN 디자인 시스템 — 토큰 레이어
+  값 출처: "STIN 자료/디자인 초안 - 무겸/*.dc.html"
+  - 베이스 색 #F4D2E3 : 브랜드 표면(피처 카드·선택 배경·안내 배너)에만. 넓은 배경엔 미사용
+  - 포인트 색 #FF4DC4 : CTA·활성 상태·링크·뱃지 등 강조 요소에만
+  - 다크모드 미지원: 아래 dark 커스텀 배리언트는 .dark 조상을 절대 붙이지 않으므로
+    shadcn 컴포넌트의 dark: 유틸이 전부 무력화된다.
+  자세한 규칙은 docs/design-system.md 참고.
+*/
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans:
+    var(--font-pretendard), "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic",
+    -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* 모바일 전용 프레임 폭 */
+  --container-frame: 390px;
+
+  /* radius 스케일 (시안: 인풋 10 · 버튼 12 · 카드 14~16 · 바텀시트 20) */
+  --radius-sm: 0.5rem; /* 8  */
+  --radius-md: 0.625rem; /* 10 */
+  --radius-lg: 0.75rem; /* 12 */
+  --radius-xl: 0.875rem; /* 14 */
+  --radius-2xl: 1rem; /* 16 */
+  --radius-3xl: 1.25rem; /* 20 */
+  --radius-4xl: 1.75rem; /* 28 */
+
+  /* 그림자 (시안) */
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.04);
+  --shadow-cta: 0 10px 24px rgb(255 77 196 / 0.28);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-body: var(--body);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+
+  --color-brand: var(--brand-surface);
+  --color-brand-foreground: var(--brand-surface-foreground);
+  --color-brand-subtle: var(--brand-subtle);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-backdrop: var(--backdrop);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* 기본 면 */
+  --background: #ffffff;
+  --foreground: #262626; /* 제목·강조 텍스트 */
+  --body: #737373; /* 히어로 서브카피 등 본문 */
+
+  --card: #ffffff;
+  --card-foreground: #262626;
+  --popover: #ffffff;
+  --popover-foreground: #262626;
+
+  /* 포인트 */
+  --primary: #ff4dc4;
+  --primary-foreground: #ffffff;
+  --primary-hover: #e0359f;
+
+  /* 브랜드 표면 (베이스 색) */
+  --brand-surface: #f4d2e3;
+  --brand-surface-foreground: #9c1f6b;
+  --brand-subtle: #faeef4; /* 썸네일·이미지 placeholder */
+
+  /* 중립 */
+  --secondary: #f5f5f5;
+  --secondary-foreground: #262626;
+  --muted: #f5f5f5;
+  --muted-foreground: #8a8a8a; /* 보조·메타 텍스트 */
+  --accent: #faeef4; /* hover 틴트 */
+  --accent-foreground: #9c1f6b;
+
+  --destructive: #e5484d;
+
+  /* 선 */
+  --border: #f0f0f0; /* 카드 보더·디바이더 */
+  --input: #eaeaea; /* 인풋 보더(1.5px) */
+  --ring: #ff4dc4; /* 포커스 링 */
+
+  /* 데스크톱에서 390px 프레임 뒤 배경 */
+  --backdrop: #ececec;
+
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html {
+    @apply font-sans;
+    color: var(--foreground);
+  }
+  body {
+    @apply bg-backdrop text-foreground;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 }
