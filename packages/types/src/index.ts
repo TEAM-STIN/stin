@@ -44,9 +44,9 @@ export interface OnboardingInput {
   skinType: SkinType;
   concerns: Concern[];
   routineLevel: RoutineLevel;
-  includeSunscreen: boolean;
-  includeEyeCream: boolean;
 }
+// 선크림·클렌징·아이크림은 사용자가 온보딩에서 고르는 값이 아니다.
+// 선크림은 추천 로직이 오전 루틴/안내 문구로 처리한다.
 
 /** 온보딩 3단계에서 "이 피부타입엔 이 레벨을 추천" 배지를 그리기 위한 응답 */
 export interface RecommendedLevelResponse {
