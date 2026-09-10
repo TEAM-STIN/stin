@@ -60,6 +60,7 @@ pnpm lint / pnpm test / pnpm typecheck      # 개별
 pnpm --filter api exec prisma migrate dev
 pnpm --filter api exec prisma db seed
 pnpm db:schema:doc                         # 스키마 요약 문서 재생성
+pnpm gardening                             # 정기 정리 (드리프트 확인)
 scripts/worktree-up.sh                     # worktree 전용 포트·DB로 부팅
 gh pr checks                               # 현재 PR의 CI 상태
 gh run view --log-failed                   # 실패한 CI 로그
