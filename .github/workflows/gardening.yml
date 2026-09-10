@@ -1,0 +1,59 @@
+name: 정기 정리
+
+# 드리프트는 필연이다 — 에이전트는 레포에 이미 있는 패턴을 최적이 아니어도 복제한다.
+# 사람이 몰아서 치우는 방식은 2인 팀에서 확장되지 않으므로, 매주 기계가 먼저 뽑는다.
+#
+# 이 워크플로는 아무것도 막지 않는다. 판단은 사람이 한다.
+# 열려 있는 점검 이슈가 이미 있으면 새로 만들지 않고 댓글만 단다 — 이슈가 쌓이면
+# 아무도 안 보게 되고, 그 순간 이 점검은 배경 소음이 된다.
+
+on:
+  schedule:
+    # 매주 월요일 09:00 KST (00:00 UTC)
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  gardening:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: 점검 실행
+        id: report
+        run: |
+          node scripts/gardening.mjs > /tmp/gardening.md
+          cat /tmp/gardening.md
+          if grep -q '정리할 것이 없습니다' /tmp/gardening.md; then
+            echo "clean=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "clean=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 이슈 열거나 댓글 달기
+        if: steps.report.outputs.clean == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          EXISTING=$(gh issue list --label gardening --state open \
+            --json number --jq '.[0].number // empty')
+
+          if [ -n "$EXISTING" ]; then
+            echo "이미 열린 점검 이슈 #$EXISTING 에 댓글을 답니다."
+            gh issue comment "$EXISTING" --body-file /tmp/gardening.md
+          else
+            gh label create gardening --color 0E8A16 \
+              --description "정기 정리" 2>/dev/null || true
+            gh issue create \
+              --title "정기 정리 — $(date -u +%Y-%m-%d)" \
+              --label gardening \
+              --body-file /tmp/gardening.md
+          fi
