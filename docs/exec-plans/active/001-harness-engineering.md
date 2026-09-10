@@ -1,6 +1,6 @@
 # 하네스 엔지니어링 세팅
 
-- 상태: 진행 중 — Phase 1·2·3 완료
+- 상태: 진행 중 — Phase 1~4 완료. 남은 것은 Phase 5(아키텍처 강제)·6(정기 정리)
 - 브랜치: `feat/harness-engineering`
 - 작성일: 2026-09-10
 
@@ -80,11 +80,11 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
 ## Phase 4 — 실행 환경 격리와 UI 가시성
 
 - [x] `main.ts`의 포트 불일치 수정 (`PORT ?? 3001`)
-- [ ] `WEB_PORT` · `API_PORT` 환경변수화
-- [ ] worktree별 Postgres 스키마 분리 (`?schema=wt_<브랜치>`) — 컨테이너는 하나로
-- [ ] `scripts/worktree-up.sh` — 한 명령으로 부팅
-- [ ] `.logs/`를 worktree별로 분리
-- [ ] `docs/generated/db-schema.md` 생성
+- [x] `WEB_PORT` · `API_PORT` 환경변수화
+- [x] worktree별 Postgres 스키마 분리 (`?schema=wt_<브랜치>`) — 컨테이너는 하나로
+- [x] `scripts/worktree-up.sh` — 한 명령으로 부팅
+- [x] `.logs/`를 worktree별로 분리
+- [x] `docs/generated/db-schema.md` 생성
 
 ## Phase 5 — 아키텍처 강제 (api 첫 도메인 모듈이 서는 즉시)
 
@@ -116,6 +116,15 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
   아무도 안 읽는다. 게이트가 되려면 통과/실패 둘 중 하나여야 한다. 켜자마자
   `prisma.service.ts`의 Prettier 위반 2건이 드러났다 — `--fix`가 매 실행마다 조용히
   고쳐놓고 있어서 레포의 파일은 한 번도 규격에 맞은 적이 없었다.
+- **2026-09-10** — `.logs/` 분리를 위한 별도 작업은 필요 없었다. `findRepoRoot`가
+  `__dirname`에서 위로 올라가며 `pnpm-workspace.yaml`을 찾으므로, worktree 안에서
+  실행하면 그 worktree의 `.logs/`가 잡힌다. 실제로 두 개를 띄워 교차 오염 0건을 확인했다.
+- **2026-09-10** — 생성 문서의 신선도를 mtime이 아니라 **내용 해시**로 판정한다.
+  mtime은 git 체크아웃마다 바뀌어서 CI에서 판정이 뒤집힌다.
+- **2026-09-10** — 빈 문자열 환경변수 함정. `.env`에 `LOG_LEVEL=`만 적히면 `??`를
+  통과해 pino가 부팅에 실패한다. `.env.example`이 바로 그 형태였고, 복사한 사람은
+  서버가 안 떴다. Phase 3의 ts-node 검증에서는 변수를 아예 설정하지 않아
+  (undefined였지 빈 문자열이 아니어서) 드러나지 않았다. **실제로 띄워봐야 나오는 종류다.**
 - **2026-09-10** — 조회 도구를 `jq`가 아니라 Node(`scripts/logs.mjs`)로 씀.
   이유: `jq`는 macOS 기본 설치가 아니라 팀원이 따로 깔아야 한다. Node는 이 레포가
   이미 요구한다(engines: node >= 24). 도구 설치를 전제하면 "그냥 cat 하기"로 돌아간다.
