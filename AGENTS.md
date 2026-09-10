@@ -39,6 +39,7 @@ DB는 PostgreSQL + Prisma 7. 배포는 AWS EC2 + Nginx + Docker Compose.
 
 1. **계획 없이 코드를 쓰지 않는다.** 절차는 [docs/workflow.md](docs/workflow.md).
 2. **`main`에서 직접 작업하지 않는다.** 브랜치 또는 worktree에서 한다.
+   `main`에서는 커밋이 훅에 막힌다.
 3. **구현한 기능에는 테스트를 쓴다.** 기준은 [docs/testing.md](docs/testing.md).
 4. **커밋 전에 `pnpm verify`를 통과시킨다.** 실패하면 커밋하지 않는다.
    Git 훅이 자동으로 막지만, 훅은 우회 가능하므로 CI가 최종 방어선이다.
