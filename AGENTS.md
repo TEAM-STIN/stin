@@ -61,6 +61,18 @@ gh pr checks                               # 현재 PR의 CI 상태
 gh run view --log-failed                   # 실패한 CI 로그
 ```
 
+**서버가 왜 그러는지 알아야 할 때** — 사람에게 로그를 붙여달라고 하지 말고 직접 읽는다.
+
+```bash
+pnpm logs:errors                           # 에러만 (스택·수정 지침 포함)
+pnpm logs:req <requestId>                  # 그 요청의 전 생애 (HTTP → SQL → 응답)
+pnpm logs:slow                             # 500ms 초과 요청만
+pnpm logs:tail [n]                         # 최근 n줄 (기본 50)
+```
+
+`.logs/api.jsonl`을 직접 `cat`하지 않는다. 수만 줄이라 컨텍스트만 쓰고 원인을 놓친다.
+로그는 API 서버가 부팅될 때마다 비워진다.
+
 ## 막혔을 때
 
 추측해서 진행하지 말고 멈춘다. 특히:

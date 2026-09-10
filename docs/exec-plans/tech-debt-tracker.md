@@ -15,7 +15,6 @@
 | 발견일 | 영역 | 내용 | 크기 |
 |---|---|---|---|
 | 2026-09-10 | api | `postinstall`의 `prisma generate`가 `DATABASE_URL`을 요구해서, `.env` 없이는 `pnpm install`이 실패한다. 지금은 문서와 CI env로 우회 중. 코드 생성에 접속 정보가 필요 없으므로 `prisma.config.ts`에서 기본값을 주는 편이 낫다 | S |
-| 2026-09-10 | api | `apps/api/src/main.ts`의 기본 포트가 `3000`이라 README(3001)와 불일치. `.env`에 `PORT`가 없으면 web과 충돌 | S |
 
 크기: S = 30분 이내 · M = 반나절 · L = 하루 이상
 
@@ -23,6 +22,7 @@
 
 | 발견일 | 해결일 | 내용 |
 |---|---|---|
+| 2026-09-10 | 2026-09-10 | `main.ts`의 기본 포트가 3000이라 README(3001)·`apps/web`과 충돌했다. 3001로 맞추고 `.env.example`에 `PORT`를 명시 |
 | 2026-09-10 | 2026-09-10 | `api`의 `lint`가 `eslint --fix`라 검증이 아니라 자동 수정이었다. `--fix`를 `lint:fix`로 분리하고 `--max-warnings 0`을 걸었다. 켜자마자 `prisma.service.ts`의 Prettier 위반 2건이 드러나 함께 교정 |
 | 2026-09-10 | 2026-09-10 | `apps/web`에 테스트 러너가 없어 `pnpm test`가 무조건 통과했다. Vitest + Testing Library 도입 |
 | 2026-09-10 | 2026-09-10 | `turbo.json`에 `typecheck` 태스크가 없었다. 전 패키지에 추가하고 `pnpm verify`에 편입 |

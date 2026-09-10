@@ -42,3 +42,9 @@ pnpm-debug.log*
 
 # vercel
 .vercel
+
+# 에이전트가 읽는 런타임 로그 (부팅할 때마다 새로 만들어짐)
+.logs/
+
+# Claude Code 개인 설정 (팀 공유는 .claude/settings.json)
+.claude/settings.local.json
