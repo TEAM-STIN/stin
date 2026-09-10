@@ -26,6 +26,16 @@
 
 `main`에서 직접 작업하지 않는다. 브랜치 이름 규칙은 [conventions.md](conventions.md).
 
+**`main`에서는 커밋 자체가 막힌다.** 브랜치 보호만으로는 push 시점에야 막히는데,
+그때는 이미 한참 작업한 뒤라 worktree 격리의 이점도 못 누린 상태다.
+시작하는 순간에 막아야 규칙이 지켜진다.
+
+실수로 `main`에서 시작했다면 수정 내용은 그대로 따라온다:
+
+```bash
+git switch -c feat/<슬러그>
+```
+
 동시에 여러 작업을 굴린다면 `git worktree`를 쓴다. 브랜치를 오가며 stash 하지 않아도 되고,
 에이전트를 여러 개 돌릴 때 서로의 파일을 건드리지 않는다.
 
@@ -66,7 +76,7 @@ pnpm verify   # 린트 · 타입체크 · 테스트 · 빌드 · 문서 검사
 
 | 시점 | 검사 |
 |---|---|
-| `pre-commit` | 스테이지된 파일 린트 + 전체 타입체크·테스트 |
+| `pre-commit` | **`main` 브랜치 차단** + 스테이지된 파일 린트 + 전체 타입체크·테스트 |
 | `commit-msg` | 커밋 메시지 형식 ([conventions.md](conventions.md)) |
 | `pre-push` | `pnpm verify` 전체 |
 
