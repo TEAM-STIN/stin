@@ -43,8 +43,21 @@ Jest. `src/**/*.spec.ts`가 단위, `test/*.e2e-spec.ts`가 E2E.
 `.env`는 커밋하지 않는다. 새 변수를 추가하면 **`.env.example`에 반드시 함께 추가**한다.
 값 없이 키와 한 줄 설명만.
 
-## 알려진 문제
+## 로깅
 
-`src/main.ts`의 기본 포트가 `3000`이라 README(3001)와 어긋난다. `.env`에 `PORT`가
-없으면 `apps/web`과 충돌한다. 수정 예정 —
-[`exec-plans/active/001-harness-engineering.md`](../../docs/exec-plans/active/001-harness-engineering.md) Phase 4.
+`nestjs-pino`를 쓴다. `console.log`나 Nest 기본 `Logger`를 쓰지 않는다 —
+JSON 구조가 깨져서 `pnpm logs:*`가 읽지 못한다.
+
+```ts
+constructor(@InjectPinoLogger(MyService.name) private readonly logger: PinoLogger) {}
+// this.logger.info({ productId, stepCount }, '루틴 추천 생성');
+```
+
+- **첫 인자는 객체, 둘째가 메시지다.** 값을 문자열에 끼워 넣지 말고 필드로 남긴다.
+  그래야 나중에 그 필드로 걸러낼 수 있다
+- 요청 안에서 찍으면 `requestId`가 자동으로 붙는다. 직접 넣지 않는다
+- 비밀값은 [`logger.config.ts`](src/logger/logger.config.ts)의 `REDACT_PATHS`가 가린다.
+  **새 비밀 필드를 만들면 거기에 추가한다**
+- 자주 나오는 실패의 수정 지침은
+  [`all-exceptions.filter.ts`](src/common/all-exceptions.filter.ts)의 `REMEDIATION`에 있다.
+  같은 에러로 두 번 헤맸다면 거기에 항목을 추가한다

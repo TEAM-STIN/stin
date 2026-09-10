@@ -14,7 +14,11 @@
     "typecheck": "turbo run typecheck",
     "check:docs": "node scripts/check-docs.mjs",
     "verify": "turbo run lint typecheck test build && node scripts/check-docs.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "logs:errors": "node scripts/logs.mjs errors",
+    "logs:req": "node scripts/logs.mjs req",
+    "logs:slow": "node scripts/logs.mjs slow",
+    "logs:tail": "node scripts/logs.mjs tail"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",

@@ -1,6 +1,6 @@
 # 하네스 엔지니어링 세팅
 
-- 상태: 진행 중 — Phase 1·2 완료 (브랜치 보호 설정만 사람 작업으로 남음)
+- 상태: 진행 중 — Phase 1·2·3 완료
 - 브랜치: `feat/harness-engineering`
 - 작성일: 2026-09-10
 
@@ -65,21 +65,21 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
 지금 `apps/api`는 모듈 2개뿐이라 로거 교체 비용이 0이다. 추천 엔진·인증을 쓴 뒤에
 넣으면 이미 작성된 코드의 로깅을 전부 고쳐야 한다.
 
-- [ ] `nestjs-pino` 도입 — `requestId` 자동 부여 + `AsyncLocalStorage` 전파
-- [ ] `apps/web` → `apps/api` 호출에 `x-request-id` 전파
-- [ ] Prisma 쿼리 로그를 같은 로거로 (dev 한정)
-- [ ] 전역 예외 필터 — `{ requestId, path, code, message, stack }` 통일 +
+- [x] `nestjs-pino` 도입 — `requestId` 자동 부여 + `AsyncLocalStorage` 전파
+- [x] `apps/web` → `apps/api` 호출에 `x-request-id` 전파
+- [x] Prisma 쿼리 로그를 같은 로거로 (dev 한정)
+- [x] 전역 예외 필터 — `{ requestId, path, code, message, stack }` 통일 +
       자주 나오는 실패에 **수정 지침** 첨부
-- [ ] 두 갈래 출력: `pino-pretty` → stdout / JSON Lines → `.logs/api.jsonl`
-- [ ] **`jq` 조회 스크립트** — `logs:errors` · `logs:req <id>` · `logs:slow` · `logs:tail`
+- [x] 두 갈래 출력: `pino-pretty` → stdout / JSON Lines → `.logs/api.jsonl`
+- [x] **`jq` 조회 스크립트** — `logs:errors` · `logs:req <id>` · `logs:slow` · `logs:tail`
       → **`AGENTS.md`의 명령 목록에 반드시 추가.** 빠지면 로깅 전체가 무효
-- [ ] 마스킹(`redact`): authorization · cookie · password · token · email
-- [ ] 위생: 부팅 시 truncate, 50MB 롤오버, 원본 직접 `cat` 금지를 `AGENTS.md`에 명시
-- [ ] `gh run *`를 `.claude/settings.local.json` 허용 목록에 추가
+- [x] 마스킹(`redact`): authorization · cookie · password · token · email
+- [x] 위생: 부팅 시 truncate, 50MB 롤오버, 원본 직접 `cat` 금지를 `AGENTS.md`에 명시
+- [x] `gh run *`를 `.claude/settings.local.json` 허용 목록에 추가
 
 ## Phase 4 — 실행 환경 격리와 UI 가시성
 
-- [ ] `main.ts`의 포트 불일치 수정 (`PORT ?? 3001`)
+- [x] `main.ts`의 포트 불일치 수정 (`PORT ?? 3001`)
 - [ ] `WEB_PORT` · `API_PORT` 환경변수화
 - [ ] worktree별 Postgres 스키마 분리 (`?schema=wt_<브랜치>`) — 컨테이너는 하나로
 - [ ] `scripts/worktree-up.sh` — 한 명령으로 부팅
@@ -116,6 +116,14 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
   아무도 안 읽는다. 게이트가 되려면 통과/실패 둘 중 하나여야 한다. 켜자마자
   `prisma.service.ts`의 Prettier 위반 2건이 드러났다 — `--fix`가 매 실행마다 조용히
   고쳐놓고 있어서 레포의 파일은 한 번도 규격에 맞은 적이 없었다.
+- **2026-09-10** — 조회 도구를 `jq`가 아니라 Node(`scripts/logs.mjs`)로 씀.
+  이유: `jq`는 macOS 기본 설치가 아니라 팀원이 따로 깔아야 한다. Node는 이 레포가
+  이미 요구한다(engines: node >= 24). 도구 설치를 전제하면 "그냥 cat 하기"로 돌아간다.
+- **2026-09-10** — 예외 필터의 로그 레벨을 상태 코드로 나눔(4xx는 warn, 5xx는 error).
+  처음엔 전부 error로 남겼는데, 실제로 띄워보니 404가 `logs:errors`를 뒤덮어
+  진짜 500이 묻혔다. 로그가 많으면 없는 것과 같다.
+- **2026-09-10** — `main.ts` 포트를 3001로 수정 (Phase 4 항목 선반영).
+  로깅을 검증하려면 서버를 띄워야 하는데, 3000이면 `apps/web`과 충돌해서 미룰 수 없었다.
 - **2026-09-10** — `apps/web`의 `typecheck`를 `next typegen && tsc --noEmit`으로.
   이유: `LayoutProps` 같은 전역 타입을 Next 16이 `.next/types/`에 생성하므로,
   `.next`가 없는 깨끗한 체크아웃에서는 `tsc`만으로 실패한다. 로컬에서는 남아 있던
