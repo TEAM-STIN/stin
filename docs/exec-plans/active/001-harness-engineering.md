@@ -116,6 +116,10 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
   아무도 안 읽는다. 게이트가 되려면 통과/실패 둘 중 하나여야 한다. 켜자마자
   `prisma.service.ts`의 Prettier 위반 2건이 드러났다 — `--fix`가 매 실행마다 조용히
   고쳐놓고 있어서 레포의 파일은 한 번도 규격에 맞은 적이 없었다.
+- **2026-09-10** — `apps/web`의 `typecheck`를 `next typegen && tsc --noEmit`으로.
+  이유: `LayoutProps` 같은 전역 타입을 Next 16이 `.next/types/`에 생성하므로,
+  `.next`가 없는 깨끗한 체크아웃에서는 `tsc`만으로 실패한다. 로컬에서는 남아 있던
+  `.next` 때문에 통과해서 **가짜 green**이었고, CI가 이걸 잡아냈다.
 - **2026-09-10** — 로깅 스택은 `nestjs-pino`. 이유: JSON 네이티브 + requestId 부여 +
   redact 마스킹 + 멀티 스트림이 전부 내장이라 직접 구현할 것이 없다.
 
