@@ -55,9 +55,24 @@ export function resolveLogLevel(
   return 'info';
 }
 
+/**
+ * 로그 레벨을 정한다.
+ *
+ * `??`가 아니라 `||`를 쓰는 이유: `.env`에 `LOG_LEVEL=`처럼 값 없이 키만 적히면
+ * 빈 문자열이 들어온다. `??`는 빈 문자열을 통과시키고, pino는
+ * "default level: must be included in custom levels"로 부팅에 실패한다.
+ * .env.example을 복사한 사람이 곧바로 겪는 문제라 방어한다.
+ */
+export function resolveLevel(
+  raw: string | undefined,
+  isProduction: boolean,
+): string {
+  return raw?.trim() || (isProduction ? 'info' : 'debug');
+}
+
 export function buildLoggerParams(): Params {
   const isProduction = process.env.NODE_ENV === 'production';
-  const level = process.env.LOG_LEVEL ?? (isProduction ? 'info' : 'debug');
+  const level = resolveLevel(process.env.LOG_LEVEL, isProduction);
 
   // 프로덕션은 stdout JSON만 쓴다. Docker의 json-file 드라이버가 받는다.
   // 개발에서는 사람용(pretty)과 에이전트용(JSON Lines 파일)을 동시에 쓴다.

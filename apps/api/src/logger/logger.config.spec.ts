@@ -4,6 +4,7 @@ import pino from 'pino';
 import {
   REDACT_PATHS,
   REQUEST_ID_HEADER,
+  resolveLevel,
   resolveLogLevel,
   resolveRequestId,
 } from './logger.config';
@@ -122,5 +123,23 @@ describe('비밀값 마스킹', () => {
     const out = logAndCapture({ body: { nickname: '무겸', skinType: 'OILY' } });
     expect(out).toContain('무겸');
     expect(out).toContain('OILY');
+  });
+});
+
+describe('resolveLevel', () => {
+  // .env에 `LOG_LEVEL=`만 적히면 빈 문자열이 들어온다. 이걸 그대로 pino에 넘기면
+  // "default level: must be included in custom levels"로 부팅이 깨진다.
+  // .env.example을 복사한 사람이 곧바로 겪는 문제라 회귀를 막는다.
+  it.each(['', '   ', undefined])('값이 %p면 기본값을 쓴다', (raw) => {
+    expect(resolveLevel(raw, false)).toBe('debug');
+    expect(resolveLevel(raw, true)).toBe('info');
+  });
+
+  it('설정된 값이 있으면 그걸 쓴다', () => {
+    expect(resolveLevel('warn', false)).toBe('warn');
+  });
+
+  it('앞뒤 공백은 다듬는다', () => {
+    expect(resolveLevel(' trace ', false)).toBe('trace');
   });
 });

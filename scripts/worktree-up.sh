@@ -70,8 +70,8 @@ API_PORT=$API_PORT
 JWT_SECRET="change-me-in-local-env"
 JWT_EXPIRES_IN="7d"
 
-LOG_LEVEL=
-LOG_FILE=
+# LOG_LEVEL / LOG_FILE은 기본값을 쓴다. 값 없이 키만 적으면 빈 문자열이 되어
+# 부팅이 깨지므로 아예 적지 않는다.
 EOF
 
 echo "── 의존성 설치"
