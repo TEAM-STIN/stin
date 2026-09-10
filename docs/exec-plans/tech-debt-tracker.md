@@ -14,6 +14,7 @@
 
 | 발견일 | 영역 | 내용 | 크기 |
 |---|---|---|---|
+| 2026-09-10 | api | `postinstall`의 `prisma generate`가 `DATABASE_URL`을 요구해서, `.env` 없이는 `pnpm install`이 실패한다. 지금은 문서와 CI env로 우회 중. 코드 생성에 접속 정보가 필요 없으므로 `prisma.config.ts`에서 기본값을 주는 편이 낫다 | S |
 | 2026-09-10 | api | `apps/api/src/main.ts`의 기본 포트가 `3000`이라 README(3001)와 불일치. `.env`에 `PORT`가 없으면 web과 충돌 | S |
 
 크기: S = 30분 이내 · M = 반나절 · L = 하루 이상

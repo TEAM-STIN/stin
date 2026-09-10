@@ -12,6 +12,12 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # apps/api의 postinstall(prisma generate)이 prisma.config.ts를 읽으면서 이 변수를 요구한다.
+  # 실제로 DB에 접속하지는 않는다 — 클라이언트 코드 생성에만 쓰이는 자리표시자다.
+  # 진짜 DB가 필요한 테스트가 생기면 services: postgres:16을 붙이고 이 값을 맞춘다.
+  DATABASE_URL: postgresql://stin:stin@localhost:5432/stin?schema=public
+
 jobs:
   verify:
     name: verify (lint · typecheck · test · build · docs)

@@ -32,6 +32,11 @@
 ## 로컬 실행 방법
 
 ```bash
+# 먼저 환경변수 파일부터. 없으면 pnpm install이 실패한다
+# (apps/api의 postinstall이 prisma generate를 돌리면서 DATABASE_URL을 요구한다)
+cp .env.example .env
+cp apps/api/.env.example apps/api/.env
+
 pnpm install
 
 # DB 실행
