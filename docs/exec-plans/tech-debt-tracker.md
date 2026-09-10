@@ -15,9 +15,6 @@
 | 발견일 | 영역 | 내용 | 크기 |
 |---|---|---|---|
 | 2026-09-10 | api | `apps/api/src/main.ts`의 기본 포트가 `3000`이라 README(3001)와 불일치. `.env`에 `PORT`가 없으면 web과 충돌 | S |
-| 2026-09-10 | api | `lint` 스크립트가 `eslint --fix`라 검증이 아니라 자동 수정이 됨. **실제로 발생함** — 2026-09-10 문서 작업 중 `pnpm lint`이 `prisma.service.ts`를 무관하게 재포맷 | S |
-| 2026-09-10 | web | 테스트 러너 없음 → `pnpm test`가 무조건 통과 | M |
-| 2026-09-10 | 전체 | `turbo.json`에 `typecheck` 태스크 없음 | S |
 
 크기: S = 30분 이내 · M = 반나절 · L = 하루 이상
 
@@ -25,4 +22,7 @@
 
 | 발견일 | 해결일 | 내용 |
 |---|---|---|
+| 2026-09-10 | 2026-09-10 | `api`의 `lint`가 `eslint --fix`라 검증이 아니라 자동 수정이었다. `--fix`를 `lint:fix`로 분리하고 `--max-warnings 0`을 걸었다. 켜자마자 `prisma.service.ts`의 Prettier 위반 2건이 드러나 함께 교정 |
+| 2026-09-10 | 2026-09-10 | `apps/web`에 테스트 러너가 없어 `pnpm test`가 무조건 통과했다. Vitest + Testing Library 도입 |
+| 2026-09-10 | 2026-09-10 | `turbo.json`에 `typecheck` 태스크가 없었다. 전 패키지에 추가하고 `pnpm verify`에 편입 |
 | 2026-09-10 | 2026-09-10 | 디자인 시안(`.dc.html`)이 레포 밖에 있는데 `design-system.md`가 이를 근거로 참조했다. 시안 참조를 끊고 `design-system.md`를 값의 정본으로 자기완결화 |

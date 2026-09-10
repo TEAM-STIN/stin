@@ -21,3 +21,4 @@ minimumReleaseAgeExclude:
   - prisma@7.10.0
   - '@prisma/adapter-pg@7.10.0'
   - '@prisma/driver-adapter-utils@7.10.0'
+  - '@rolldown/binding-openharmony-arm64@1.2.8'

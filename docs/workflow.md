@@ -35,10 +35,21 @@
 ## 4. 검증 실행
 
 ```bash
-pnpm lint && pnpm test && pnpm build
+pnpm verify   # 린트 · 타입체크 · 테스트 · 빌드 · 문서 검사
 ```
 
 **통과하지 못하면 커밋하지 않는다.** 실패를 남긴 채로 PR을 열지 않는다.
+
+이건 권고가 아니라 강제다. Git 훅이 자동으로 막는다:
+
+| 시점 | 검사 |
+|---|---|
+| `pre-commit` | 스테이지된 파일 린트 + 전체 타입체크·테스트 |
+| `commit-msg` | 커밋 메시지 형식 ([conventions.md](conventions.md)) |
+| `pre-push` | `pnpm verify` 전체 |
+
+훅은 `--no-verify`로 우회할 수 있다. **그래서 CI가 최종 방어선이다** — 우회하면
+PR에서 빨갛게 뜨고 머지가 막힌다.
 
 ## 5. 에이전트 사전 리뷰
 

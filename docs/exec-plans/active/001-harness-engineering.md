@@ -1,6 +1,6 @@
 # 하네스 엔지니어링 세팅
 
-- 상태: 진행 중 — Phase 1 완료, Phase 2 착수 전
+- 상태: 진행 중 — Phase 1·2 완료 (브랜치 보호 설정만 사람 작업으로 남음)
 - 브랜치: `feat/harness-engineering`
 - 작성일: 2026-09-10
 
@@ -49,13 +49,13 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
 
 ## Phase 2 — 강제 검증 파이프라인 (핵심)
 
-- [ ] 스크립트 정리: `api`의 `lint --fix` 분리, 전 패키지 `typecheck`, `turbo.json` 태스크 추가
-- [ ] 루트 `verify: turbo run lint typecheck test build`
-- [ ] `apps/web`에 Vitest + Testing Library 도입 (스모크 테스트 1개로 파이프라인 확인)
-- [ ] husky + lint-staged + commitlint
+- [x] 스크립트 정리: `api`의 `lint --fix` 분리, 전 패키지 `typecheck`, `turbo.json` 태스크 추가
+- [x] 루트 `verify: turbo run lint typecheck test build`
+- [x] `apps/web`에 Vitest + Testing Library 도입 (스모크 테스트 1개로 파이프라인 확인)
+- [x] husky + lint-staged + commitlint
       (`pre-commit` → `commit-msg` → `pre-push`)
-- [ ] `.github/workflows/ci.yml` + `pull_request_template.md`
-- [ ] `scripts/check-docs.mjs` — AGENTS.md 100줄 상한, 링크 유효성, 고아 문서 탐지.
+- [x] `.github/workflows/ci.yml` + `pull_request_template.md`
+- [x] `scripts/check-docs.mjs` — AGENTS.md 100줄 상한, 링크 유효성, 고아 문서 탐지.
       **에러 메시지에 수정 지침을 함께 출력한다**
 - [ ] 브랜치 보호 (사람 작업): `main` 직접 push 금지 · PR 필수 · CI check 필수 ·
       **approval 필수는 끔** · 대화 해결 필수
@@ -112,6 +112,10 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
   대신 워크플로 5단계의 에이전트 사전 리뷰가 그 자리를 메운다.
 - **2026-09-10** — 로그 가시성을 Phase 3으로 앞당김. 이유: api가 스캐폴드 상태인
   지금이 교체 비용이 가장 낮고, 도메인 코드가 처음부터 구조화 로그 위에서 쓰이게 하려고.
+- **2026-09-10** — 린트에 `--max-warnings 0`을 걸어 경고도 차단하기로 함. 이유: 경고는
+  아무도 안 읽는다. 게이트가 되려면 통과/실패 둘 중 하나여야 한다. 켜자마자
+  `prisma.service.ts`의 Prettier 위반 2건이 드러났다 — `--fix`가 매 실행마다 조용히
+  고쳐놓고 있어서 레포의 파일은 한 번도 규격에 맞은 적이 없었다.
 - **2026-09-10** — 로깅 스택은 `nestjs-pino`. 이유: JSON 네이티브 + requestId 부여 +
   redact 마스킹 + 멀티 스트림이 전부 내장이라 직접 구현할 것이 없다.
 

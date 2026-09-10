@@ -39,7 +39,8 @@ DB는 PostgreSQL + Prisma 7. 배포는 AWS EC2 + Nginx + Docker Compose.
 1. **계획 없이 코드를 쓰지 않는다.** 절차는 [docs/workflow.md](docs/workflow.md).
 2. **`main`에서 직접 작업하지 않는다.** 브랜치 또는 worktree에서 한다.
 3. **구현한 기능에는 테스트를 쓴다.** 기준은 [docs/testing.md](docs/testing.md).
-4. **커밋 전에 `pnpm lint && pnpm test && pnpm build`를 통과시킨다.** 실패하면 커밋하지 않는다.
+4. **커밋 전에 `pnpm verify`를 통과시킨다.** 실패하면 커밋하지 않는다.
+   Git 훅이 자동으로 막지만, 훅은 우회 가능하므로 CI가 최종 방어선이다.
 5. **비밀값을 커밋하지 않는다.** `.env`는 절대 스테이징하지 않는다. `.env.example`만 갱신한다.
 6. **결정을 내렸으면 [docs/architecture.md](docs/architecture.md)에 "왜"를 남긴다.** 코드만 남기지 않는다.
 7. **레포 밖 지식에 의존하지 않는다.** 슬랙·구글독스·외부 시안에만 있는 합의는
@@ -52,7 +53,8 @@ pnpm install
 docker compose up -d                       # PostgreSQL
 pnpm --filter web dev                      # http://localhost:3000
 pnpm --filter api start:dev                # http://localhost:3001
-pnpm lint / pnpm test / pnpm build         # turbo 전체
+pnpm verify                                # 린트·타입·테스트·빌드·문서 전체
+pnpm lint / pnpm test / pnpm typecheck      # 개별
 pnpm --filter api exec prisma migrate dev
 pnpm --filter api exec prisma db seed
 gh pr checks                               # 현재 PR의 CI 상태

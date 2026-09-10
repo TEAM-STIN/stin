@@ -39,8 +39,8 @@
 | `apps/api` E2E | Jest | `test/*.e2e-spec.ts` |
 | `apps/web` | Vitest + Testing Library | 컴포넌트 옆 `*.test.tsx` |
 
-> `apps/web`의 Vitest는 아직 도입 전이다 —
-> [exec-plans/active/001-harness-engineering.md](exec-plans/active/001-harness-engineering.md) Phase 2.
+설정은 `apps/web/vitest.config.mts`, 공통 셋업은 `apps/web/vitest.setup.ts`.
+`@testing-library/jest-dom` 매처를 쓸 수 있다.
 
 ## 작성 방침
 
