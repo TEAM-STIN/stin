@@ -30,6 +30,7 @@ DB는 PostgreSQL + Prisma 7. 배포는 AWS EC2 + Nginx + Docker Compose.
 | [docs/functional-ingredients.md](docs/functional-ingredients.md) | 성분·추천 로직을 다룰 때 |
 | [docs/references/](docs/references/) | Prisma·Next·Nest API가 기억과 다를 때 |
 | [docs/exec-plans/active/](docs/exec-plans/active/) | 진행 중인 작업 계획 |
+| [docs/generated/db-schema.md](docs/generated/db-schema.md) | 데이터 모델을 빠르게 훑을 때 (자동 생성 요약) |
 | [apps/api/prisma/schema.prisma](apps/api/prisma/schema.prisma) | 데이터 모델의 **정본** |
 
 하위 디렉터리에 국소 규칙이 있다 — [apps/web/AGENTS.md](apps/web/AGENTS.md), [apps/api/AGENTS.md](apps/api/AGENTS.md).
@@ -57,6 +58,8 @@ pnpm verify                                # 린트·타입·테스트·빌드·
 pnpm lint / pnpm test / pnpm typecheck      # 개별
 pnpm --filter api exec prisma migrate dev
 pnpm --filter api exec prisma db seed
+pnpm db:schema:doc                         # 스키마 요약 문서 재생성
+scripts/worktree-up.sh                     # worktree 전용 포트·DB로 부팅
 gh pr checks                               # 현재 PR의 CI 상태
 gh run view --log-failed                   # 실패한 CI 로그
 ```

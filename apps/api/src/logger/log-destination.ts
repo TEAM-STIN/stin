@@ -20,7 +20,9 @@ function findRepoRoot(from: string): string {
 
 /** JSON Lines 로그 파일의 절대 경로. LOG_FILE로 덮어쓸 수 있다. */
 export function resolveLogFile(): string {
-  if (process.env.LOG_FILE) return resolve(process.env.LOG_FILE);
+  // 빈 문자열·공백은 "설정 안 함"으로 본다 (.env에 `LOG_FILE=`만 적힌 경우).
+  const configured = process.env.LOG_FILE?.trim();
+  if (configured) return resolve(configured);
   return join(findRepoRoot(__dirname), '.logs', 'api.jsonl');
 }
 

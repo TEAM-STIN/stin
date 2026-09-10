@@ -8,6 +8,7 @@
 // 에러 메시지에는 반드시 "어떻게 고치는지"를 함께 담는다. 사람이든 에이전트든
 // 메시지만 읽고 다음 행동을 알 수 있어야 한다.
 
+import { createHash } from 'node:crypto';
 import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { join, dirname, relative, resolve, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -117,15 +118,23 @@ for (const doc of docs) {
   );
 }
 
-// ── 4. 스키마가 바뀌면 생성 문서도 함께 바뀌어야 한다 (Phase 4에서 활성) ──
+// ── 4. 스키마가 바뀌면 생성 문서도 함께 바뀌어야 한다 ────────────────────
+// mtime은 git 체크아웃마다 바뀌어서 CI에서 판정이 뒤집힌다. 내용 해시로 본다.
 const generated = join(ROOT, 'docs/generated/db-schema.md');
-if (existsSync(generated)) {
-  const schema = join(ROOT, 'apps/api/prisma/schema.prisma');
-  if (existsSync(schema) && statSync(schema).mtimeMs > statSync(generated).mtimeMs) {
+const schema = join(ROOT, 'apps/api/prisma/schema.prisma');
+if (existsSync(generated) && existsSync(schema)) {
+  const expected = createHash('sha256')
+    .update(read(schema))
+    .digest('hex')
+    .slice(0, 16);
+  const recorded = /<!-- schema-hash: ([0-9a-f]+) -->/.exec(read(generated))?.[1];
+
+  if (recorded !== expected) {
     fail(
-      'schema.prisma가 docs/generated/db-schema.md보다 최신입니다.',
-      '생성 문서를 다시 만들어 함께 커밋하세요. 스키마와 문서가 어긋나면\n' +
-        '     에이전트가 존재하지 않는 필드를 참조합니다.',
+      'docs/generated/db-schema.md가 schema.prisma와 어긋납니다.',
+      '`pnpm db:schema:doc`을 실행해 다시 만들고 함께 커밋하세요.\n' +
+        '     문서를 손으로 고치지 마세요 — 스키마와 어긋나면 에이전트가\n' +
+        '     존재하지 않는 필드를 참조합니다.',
     );
   }
 }

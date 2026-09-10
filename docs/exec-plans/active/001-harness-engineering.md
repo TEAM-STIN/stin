@@ -1,6 +1,6 @@
 # 하네스 엔지니어링 세팅
 
-- 상태: 진행 중 — Phase 1·2·3 완료
+- 상태: 진행 중 — Phase 1~4 완료. 남은 것은 Phase 5(아키텍처 강제)·6(정기 정리)
 - 브랜치: `feat/harness-engineering`
 - 작성일: 2026-09-10
 
@@ -57,8 +57,8 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
 - [x] `.github/workflows/ci.yml` + `pull_request_template.md`
 - [x] `scripts/check-docs.mjs` — AGENTS.md 100줄 상한, 링크 유효성, 고아 문서 탐지.
       **에러 메시지에 수정 지침을 함께 출력한다**
-- [ ] 브랜치 보호 (사람 작업): `main` 직접 push 금지 · PR 필수 · CI check 필수 ·
-      **approval 필수는 끔** · 대화 해결 필수
+- [x] 브랜치 보호: `main` 직접 push 금지 · PR 필수 · CI check 필수 ·
+      approval 필수는 끔 · 대화 해결 필수 · **admin에게도 적용**
 
 ## Phase 3 — 로그 가시성 (api 도메인 코드 착수 전)
 
@@ -80,11 +80,11 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
 ## Phase 4 — 실행 환경 격리와 UI 가시성
 
 - [x] `main.ts`의 포트 불일치 수정 (`PORT ?? 3001`)
-- [ ] `WEB_PORT` · `API_PORT` 환경변수화
-- [ ] worktree별 Postgres 스키마 분리 (`?schema=wt_<브랜치>`) — 컨테이너는 하나로
-- [ ] `scripts/worktree-up.sh` — 한 명령으로 부팅
-- [ ] `.logs/`를 worktree별로 분리
-- [ ] `docs/generated/db-schema.md` 생성
+- [x] `WEB_PORT` · `API_PORT` 환경변수화
+- [x] worktree별 Postgres 스키마 분리 (`?schema=wt_<브랜치>`) — 컨테이너는 하나로
+- [x] `scripts/worktree-up.sh` — 한 명령으로 부팅
+- [x] `.logs/`를 worktree별로 분리
+- [x] `docs/generated/db-schema.md` 생성
 
 ## Phase 5 — 아키텍처 강제 (api 첫 도메인 모듈이 서는 즉시)
 
@@ -107,6 +107,12 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
 
 ## 결정 로그
 
+- **2026-09-10** — 브랜치 보호를 켜려고 레포를 **public으로 전환**했다. Free 조직의
+  private 레포는 브랜치 보호도 룰셋도 403이라, 공개하거나 유료 플랜으로 올리는 수밖에
+  없었다. 전환 전 히스토리 전체를 비밀값 스캔했고 `.env`는 커밋된 적이 없었다.
+- **2026-09-10** — `enforce_admins`를 **true**로 켰다. 처음엔 false로 제안했는데,
+  확인해보니 팀원 두 명이 **모두 admin**이라 그 설정이면 둘 다 보호를 우회할 수 있어
+  장식이 된다. admin 계정으로 `main`에 직접 push를 시도해 실제로 막히는 것을 확인했다.
 - **2026-09-10** — 사람 리뷰를 GitHub required approval로 강제하지 않기로 함.
   이유: 2인 팀에서 리뷰어가 1명뿐이라 강제하면 상대 부재 시 모든 머지가 막힌다.
   대신 워크플로 5단계의 에이전트 사전 리뷰가 그 자리를 메운다.
@@ -116,6 +122,15 @@ OpenAI 「하네스 엔지니어링: 에이전트 우선 세계에서 Codex 활�
   아무도 안 읽는다. 게이트가 되려면 통과/실패 둘 중 하나여야 한다. 켜자마자
   `prisma.service.ts`의 Prettier 위반 2건이 드러났다 — `--fix`가 매 실행마다 조용히
   고쳐놓고 있어서 레포의 파일은 한 번도 규격에 맞은 적이 없었다.
+- **2026-09-10** — `.logs/` 분리를 위한 별도 작업은 필요 없었다. `findRepoRoot`가
+  `__dirname`에서 위로 올라가며 `pnpm-workspace.yaml`을 찾으므로, worktree 안에서
+  실행하면 그 worktree의 `.logs/`가 잡힌다. 실제로 두 개를 띄워 교차 오염 0건을 확인했다.
+- **2026-09-10** — 생성 문서의 신선도를 mtime이 아니라 **내용 해시**로 판정한다.
+  mtime은 git 체크아웃마다 바뀌어서 CI에서 판정이 뒤집힌다.
+- **2026-09-10** — 빈 문자열 환경변수 함정. `.env`에 `LOG_LEVEL=`만 적히면 `??`를
+  통과해 pino가 부팅에 실패한다. `.env.example`이 바로 그 형태였고, 복사한 사람은
+  서버가 안 떴다. Phase 3의 ts-node 검증에서는 변수를 아예 설정하지 않아
+  (undefined였지 빈 문자열이 아니어서) 드러나지 않았다. **실제로 띄워봐야 나오는 종류다.**
 - **2026-09-10** — 조회 도구를 `jq`가 아니라 Node(`scripts/logs.mjs`)로 씀.
   이유: `jq`는 macOS 기본 설치가 아니라 팀원이 따로 깔아야 한다. Node는 이 레포가
   이미 요구한다(engines: node >= 24). 도구 설치를 전제하면 "그냥 cat 하기"로 돌아간다.

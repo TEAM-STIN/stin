@@ -19,6 +19,11 @@ describe('resolveLogFile', () => {
     expect(resolveLogFile()).toBe('/tmp/custom.jsonl');
   });
 
+  it.each(['', '   '])('LOG_FILE이 %p면 설정 안 한 것으로 본다', (raw) => {
+    process.env.LOG_FILE = raw;
+    expect(resolveLogFile()).toMatch(/\.logs\/api\.jsonl$/);
+  });
+
   it('기본값은 레포 루트의 .logs/api.jsonl이다', () => {
     delete process.env.LOG_FILE;
     // cwd가 apps/api여도 레포 루트를 찾아야 한다.

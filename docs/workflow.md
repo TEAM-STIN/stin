@@ -26,7 +26,29 @@
 
 `main`에서 직접 작업하지 않는다. 브랜치 이름 규칙은 [conventions.md](conventions.md).
 
-동시에 여러 작업을 굴린다면 `git worktree`를 쓴다.
+동시에 여러 작업을 굴린다면 `git worktree`를 쓴다. 브랜치를 오가며 stash 하지 않아도 되고,
+에이전트를 여러 개 돌릴 때 서로의 파일을 건드리지 않는다.
+
+```bash
+git worktree add ../stin-<이름> -b feat/<슬러그>
+cd ../stin-<이름>
+scripts/worktree-up.sh                 # 포트·DB 스키마 할당 + 서버 부팅
+```
+
+`worktree-up.sh`가 브랜치 이름에서 **결정적으로** 포트와 DB 스키마를 정한다.
+같은 브랜치는 항상 같은 포트를 받고, 다른 브랜치와 겹치지 않는다.
+
+| 격리되는 것 | 방식 |
+|---|---|
+| 포트 | 브랜치 해시로 web/api 한 쌍 배정 (`main`은 3000/3001 고정) |
+| DB | 컨테이너는 하나, **Postgres 스키마를 분리** (`wt_<브랜치>`) |
+| 로그 | worktree 디렉터리 안의 `.logs/`라 자동으로 분리됨 |
+
+- `--setup-only`를 주면 설정만 하고 서버는 안 띄운다
+- 이미 있는 `apps/api/.env`를 말없이 덮어쓰지 않는다. 직접 관리하던 파일이면
+  반영할 값을 출력하고 멈춘다
+- 작업이 끝나면 `git worktree remove ../stin-<이름>`. DB 스키마는 남으니
+  정리하려면 `DROP SCHEMA wt_<브랜치> CASCADE`
 
 ## 3. 테스트 작성 (건너뛸 수 없음)
 
