@@ -46,5 +46,6 @@ components/<feature>/*  특정 화면 전용. 다른 화면에서 필요해지�
 
 ## 테스트
 
-Vitest + Testing Library. 아직 도입 전이다 —
-[`exec-plans/active/001-harness-engineering.md`](../../docs/exec-plans/active/001-harness-engineering.md) Phase 2.
+Vitest + Testing Library. `pnpm --filter web test` (감시 모드는 `test:watch`).
+테스트 파일은 컴포넌트 옆에 `*.test.tsx`로 둔다. 기준은
+[`docs/testing.md`](../../docs/testing.md).

@@ -1,0 +1,65 @@
+name: CI
+
+# 이것이 최종 방어선이다. Git 훅은 --no-verify로 우회할 수 있지만 여기는 우회할 수 없다.
+# main 브랜치 보호에서 이 체크를 필수로 걸어야 실제 게이트가 된다.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # apps/api의 postinstall(prisma generate)이 prisma.config.ts를 읽으면서 이 변수를 요구한다.
+  # 실제로 DB에 접속하지는 않는다 — 클라이언트 코드 생성에만 쓰이는 자리표시자다.
+  # 진짜 DB가 필요한 테스트가 생기면 services: postgres:16을 붙이고 이 값을 맞춘다.
+  DATABASE_URL: postgresql://stin:stin@localhost:5432/stin?schema=public
+
+jobs:
+  verify:
+    name: verify (lint · typecheck · test · build · docs)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      # packageManager 필드(pnpm@11.x)를 그대로 따른다.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # 로컬에서 커밋 전에 돌리는 것과 같은 명령이다.
+      # 여기서 깨진다면 로컬 훅을 건너뛰었다는 뜻이다.
+      - run: pnpm verify
+
+  commitlint:
+    name: commit message
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: PR에 담긴 커밋들의 메시지 검사
+        run: |
+          pnpm exec commitlint \
+            --from ${{ github.event.pull_request.base.sha }} \
+            --to ${{ github.event.pull_request.head.sha }} \
+            --verbose
