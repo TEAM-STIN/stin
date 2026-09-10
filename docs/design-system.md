@@ -1,7 +1,10 @@
 # STIN 디자인 시스템
 
-프론트(`apps/web`)의 시각 언어와 컴포넌트 규칙. 값은 전부
-`STIN 자료/디자인 초안 - 무겸/*.dc.html` 시안에서 추출했다.
+프론트(`apps/web`)의 시각 언어와 컴포넌트 규칙. **이 문서가 값의 정본이다.**
+
+값은 원래 디자인 시안(`*.dc.html`, 모바일 9개 화면)에서 추출했지만, 시안 파일은
+레포에 없다. 따라서 시안을 찾아보려 하지 말고 **여기 적힌 값만 근거로 삼는다.**
+필요한 값이 여기 없으면 임의로 정하지 말고 사람에게 묻고, 정해지면 여기에 추가한다.
 
 ## 기본 방침
 
@@ -43,7 +46,7 @@ Tailwind 유틸(`bg-primary`, `text-brand-foreground` 등)로 쓴다.
 폰트: **Pretendard Variable** self-host (`app/fonts/PretendardVariable.woff2`,
 `next/font/local`, SIL OFL-1.1). fallback은 `Apple SD Gothic Neo` / `Malgun Gothic` / system.
 
-시안 9개 화면에서 교차 확인한 스케일:
+9개 화면에서 교차 확인해 확정한 스케일:
 
 | 역할 | 크기 / 행간 / 굵기 |
 | --- | --- |
