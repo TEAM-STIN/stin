@@ -8,7 +8,9 @@ async function bootstrap() {
   // 이게 없으면 초기 로그만 Nest 기본 로거 형식으로 섞여 파싱이 깨진다.
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   app.useLogger(app.get(Logger));
-  await app.listen(process.env.PORT ?? 3001);
+  // API_PORT를 먼저 본다. worktree를 여러 개 띄울 때 각자 다른 포트를 받는다
+  // (scripts/worktree-up.sh가 정해준다). PORT는 배포 환경 호환용.
+  await app.listen(process.env.API_PORT ?? process.env.PORT ?? 3001);
 }
 // eslint no-floating-promises: 최상위 호출이라 대기할 곳이 없다. 의도된 fire-and-forget.
 void bootstrap();
