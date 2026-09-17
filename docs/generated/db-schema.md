@@ -1,7 +1,7 @@
 # 데이터 모델 요약
 
 <!-- 이 파일은 `pnpm db:schema:doc`이 만든다. 손으로 고치지 말 것. -->
-<!-- schema-hash: 07d33c369028f1ac -->
+<!-- schema-hash: de4605dcd5997e2f -->
 
 정본은 [`apps/api/prisma/schema.prisma`](../../apps/api/prisma/schema.prisma)다.
 이 문서는 모델·필드·관계만 추린 요약이라, 인덱스나 제약 같은 세부는 원본을 봐야 한다.
@@ -131,7 +131,7 @@
 | 필드 | 타입 | 비고 |
 |---|---|---|
 | `id` | `String` @id @default(cuid()) |  |
-| `stepCount` | `Int` | 2 / 3 / 4 |
+| `stepCount` | `Int` @unique | 2 / 3 / 4. 단계 수마다 템플릿은 하나 (요구사항 §4.3 단계 구성 고정) |
 | `recommendedSkinTypes` | `SkinType[]` | 온보딩3 "N단계 · O피부에 추천" 배지용 |
 
 관계: `steps` → RoutineTemplateStep[]

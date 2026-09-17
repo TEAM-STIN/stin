@@ -188,7 +188,7 @@ model IngredientRule {
 
 model RoutineTemplate {
   id                   String     @id @default(cuid())
-  stepCount            Int // 2 / 3 / 4
+  stepCount            Int        @unique // 2 / 3 / 4. 단계 수마다 템플릿은 하나 (요구사항 §4.3 단계 구성 고정)
   recommendedSkinTypes SkinType[] // 온보딩3 "N단계 · O피부에 추천" 배지용
 
   steps RoutineTemplateStep[]
@@ -201,6 +201,8 @@ model RoutineTemplateStep {
   order      Int // 1,2,3...
   category   StepCategory
   label      String? // 예: "가벼운 세럼" / "고농축 세럼" 구분용
+
+  @@unique([templateId, order]) // 한 템플릿 안에서 순서는 겹치지 않음
 }
 
 // ── 저장된 루틴 (실제 사용자 결과물) ───────────────────
@@ -249,6 +251,7 @@ model Review {
   recommendations ReviewRecommendation[]
 
   @@unique([userId, productId])
+  @@index([productId, createdAt]) // 제품별 리뷰 목록 최신순·추천순 2차 정렬 (FR-REV-12·13·17)
 }
 
 // 리뷰 추천(도움돼요). 추천순 정렬(FR-REV-12)과 "내가 눌렀는지"(FR-REV-21)를 함께 알아야 해서
