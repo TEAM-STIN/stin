@@ -1,12 +1,12 @@
 # 데이터 모델 요약
 
 <!-- 이 파일은 `pnpm db:schema:doc`이 만든다. 손으로 고치지 말 것. -->
-<!-- schema-hash: 108ddcab64fe1c28 -->
+<!-- schema-hash: cb32c8434a7518fe -->
 
 정본은 [`apps/api/prisma/schema.prisma`](../../apps/api/prisma/schema.prisma)다.
 이 문서는 모델·필드·관계만 추린 요약이라, 인덱스나 제약 같은 세부는 원본을 봐야 한다.
 
-모델 13개 · Enum 9개
+모델 14개 · Enum 9개
 
 ## Enum
 
@@ -34,7 +34,7 @@
 | `concernTags` | `ConcernTag[]` |  |
 | `createdAt` | `DateTime` @default(now()) |  |
 
-관계: `routines` → Routine[] · `reviews` → Review[]
+관계: `routines` → Routine[] · `reviews` → Review[] · `reviewRecommendations` → ReviewRecommendation[]
 
 ### Brand
 
@@ -187,5 +187,16 @@
 | `content` | `String?` |  |
 | `createdAt` | `DateTime` @default(now()) |  |
 
-관계: `user` → User · `product` → Product
+관계: `user` → User · `product` → Product · `recommendations` → ReviewRecommendation[]
+
+### ReviewRecommendation
+
+| 필드 | 타입 | 비고 |
+|---|---|---|
+| `id` | `String` @id @default(cuid()) |  |
+| `reviewId` | `String` |  |
+| `userId` | `String` |  |
+| `createdAt` | `DateTime` @default(now()) |  |
+
+관계: `review` → Review · `user` → User
 
