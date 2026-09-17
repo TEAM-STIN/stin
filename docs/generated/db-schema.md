@@ -1,12 +1,12 @@
 # 데이터 모델 요약
 
 <!-- 이 파일은 `pnpm db:schema:doc`이 만든다. 손으로 고치지 말 것. -->
-<!-- schema-hash: 9672dee9faf47a00 -->
+<!-- schema-hash: 7730597e10dde07b -->
 
 정본은 [`apps/api/prisma/schema.prisma`](../../apps/api/prisma/schema.prisma)다.
 이 문서는 모델·필드·관계만 추린 요약이라, 인덱스나 제약 같은 세부는 원본을 봐야 한다.
 
-모델 14개 · Enum 9개
+모델 14개 · Enum 10개
 
 ## Enum
 
@@ -19,6 +19,7 @@
 - **TimeOfDay** — `AM`(아침) · `PM`(저녁)
 - **UsageDuration** — `UNDER_1_WEEK`(1주 미만) · `ONE_TO_4_WEEKS`(1주~4주) · `ONE_TO_3_MONTHS`(1~3개월) · `OVER_3_MONTHS`(3개월 이상)
 - **DissatisfactionTag** — `IRRITATION`(자극) · `GREASY`(유분) · `SCENT`(향) · `PRICE`(가격)
+- **AuthProvider** — `KAKAO`(카카오 (요구사항 §10-2: 카카오 단일로 시작. 제공자 추가 시 값 추가))
 
 ## 모델
 
@@ -27,9 +28,11 @@
 | 필드 | 타입 | 비고 |
 |---|---|---|
 | `id` | `String` @id @default(cuid()) |  |
-| `email` | `String` @unique |  |
-| `passwordHash` | `String` |  |
-| `nickname` | `String` |  |
+| `provider` | `AuthProvider` |  |
+| `providerId` | `String` | 제공자가 발급한 계정 고유 ID |
+| `email` | `String?` | 선택 동의로 받은 경우만. 제공자 간 중복 가능해 unique 아님 |
+| `nickname` | `String` | 제공자 값으로 초기화, 없으면 기본 닉네임 (FR-AUTH-05) |
+| `profileImageUrl` | `String?` |  |
 | `skinType` | `SkinType?` |  |
 | `concernTags` | `ConcernTag[]` |  |
 | `createdAt` | `DateTime` @default(now()) |  |
