@@ -79,8 +79,9 @@ model User {
   concernTags  ConcernTag[]
   createdAt    DateTime     @default(now())
 
-  routines Routine[]
-  reviews  Review[]
+  routines              Routine[]
+  reviews               Review[]
+  reviewRecommendations ReviewRecommendation[]
 }
 
 // ── 제품 도메인 ─────────────────────────────────────
@@ -233,5 +234,20 @@ model Review {
   content             String?
   createdAt           DateTime             @default(now())
 
+  recommendations ReviewRecommendation[]
+
   @@unique([userId, productId])
+}
+
+// 리뷰 추천(도움돼요). 추천순 정렬(FR-REV-12)과 "내가 눌렀는지"(FR-REV-21)를 함께 알아야 해서
+// 카운터 컬럼이 아니라 기록 테이블로 둔다. 본인 리뷰 추천 차단(FR-REV-20)은 서비스 레이어에서 검증.
+model ReviewRecommendation {
+  id        String   @id @default(cuid())
+  reviewId  String
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade) // 리뷰 삭제 시 추천도 삭제 (FR-REV-08)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([reviewId, userId]) // 한 리뷰에 한 번만 (FR-REV-19). reviewId가 앞이라 리뷰별 집계 인덱스를 겸함
 }
