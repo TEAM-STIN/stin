@@ -30,7 +30,7 @@ enum StepCategory {
   TONER // 토너
   SERUM // 세럼
   CREAM // 크림
-  SUNSCREEN // 선크림 (RoutineTemplateStep에는 미포함, Product/RoutineStep에서만 사용)
+  SUNSCREEN // 선크림 (향후 확장용, 현재 미사용 (요구사항 §4.3·§9))
 }
 
 enum RuleSeverity {
