@@ -208,7 +208,7 @@ model Routine {
 model RoutineStep {
   id         String       @id @default(cuid())
   routineId  String
-  routine    Routine      @relation(fields: [routineId], references: [id])
+  routine    Routine      @relation(fields: [routineId], references: [id], onDelete: Cascade) // 루틴 삭제 시 단계도 함께 삭제 (FR-SAV-04)
   timeOfDay  TimeOfDay // AM / PM
   order      Int
   category   StepCategory

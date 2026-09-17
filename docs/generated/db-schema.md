@@ -1,7 +1,7 @@
 # 데이터 모델 요약
 
 <!-- 이 파일은 `pnpm db:schema:doc`이 만든다. 손으로 고치지 말 것. -->
-<!-- schema-hash: 979a1ccb6a60cf62 -->
+<!-- schema-hash: 108ddcab64fe1c28 -->
 
 정본은 [`apps/api/prisma/schema.prisma`](../../apps/api/prisma/schema.prisma)다.
 이 문서는 모델·필드·관계만 추린 요약이라, 인덱스나 제약 같은 세부는 원본을 봐야 한다.
