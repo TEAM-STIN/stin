@@ -68,20 +68,29 @@ enum DissatisfactionTag {
   PRICE // 가격
 }
 
+enum AuthProvider {
+  KAKAO // 카카오 (요구사항 §10-2: 카카오 단일로 시작. 제공자 추가 시 값 추가)
+}
+
 // ── 사용자 ──────────────────────────────────────────
 
+// 소셜 로그인 전용 (FR-AUTH-01·02). 비밀번호를 저장하지 않는다.
 model User {
-  id           String       @id @default(cuid())
-  email        String       @unique
-  passwordHash String
-  nickname     String
-  skinType     SkinType?
-  concernTags  ConcernTag[]
-  createdAt    DateTime     @default(now())
+  id              String       @id @default(cuid())
+  provider        AuthProvider
+  providerId      String // 제공자가 발급한 계정 고유 ID
+  email           String? // 선택 동의로 받은 경우만. 제공자 간 중복 가능해 unique 아님
+  nickname        String // 제공자 값으로 초기화, 없으면 기본 닉네임 (FR-AUTH-05)
+  profileImageUrl String?
+  skinType        SkinType?
+  concernTags     ConcernTag[]
+  createdAt       DateTime     @default(now())
 
   routines              Routine[]
   reviews               Review[]
   reviewRecommendations ReviewRecommendation[]
+
+  @@unique([provider, providerId]) // 같은 제공자 계정이면 같은 사용자 (FR-AUTH-04)
 }
 
 // ── 제품 도메인 ─────────────────────────────────────
