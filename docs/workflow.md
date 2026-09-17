@@ -95,7 +95,7 @@ PR을 열기 전에 `/code-review`로 스스로 검토하고, 나온 지적을 �
 - PR 본문에 exec-plan 링크를 넣는다
 - CI 통과가 실질적인 게이트다. 사람 승인은 GitHub이 강제하지 않는다 —
   둘 다 있을 때는 서로 보고, 급하면 CI를 믿고 머지한다
-- 머지 후 exec-plan을 `docs/exec-plans/completed/`로 옮긴다
+- 머지 후 exec-plan을 [docs/exec-plans/completed/](exec-plans/completed/)로 옮긴다
 
 ## UI를 바꿨다면
 
