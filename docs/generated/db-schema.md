@@ -1,7 +1,7 @@
 # 데이터 모델 요약
 
 <!-- 이 파일은 `pnpm db:schema:doc`이 만든다. 손으로 고치지 말 것. -->
-<!-- schema-hash: de4605dcd5997e2f -->
+<!-- schema-hash: 7d848ab600824f35 -->
 
 정본은 [`apps/api/prisma/schema.prisma`](../../apps/api/prisma/schema.prisma)다.
 이 문서는 모델·필드·관계만 추린 요약이라, 인덱스나 제약 같은 세부는 원본을 봐야 한다.
@@ -94,6 +94,8 @@
 |---|---|---|
 | `id` | `String` @id @default(cuid()) |  |
 | `name` | `String` @unique | 예: "레티노이드류", "AHA류", "BHA류", "PHA류" |
+| `preferredTimeOfDay` | `TimeOfDay?` |  |
+| `timeOfDayReason` | `String?` | 시간대를 정한 사유. 근거 문장 생성에 쓴다 (FR-RSN-02) |
 
 관계: `ingredients` → Ingredient[] · `rulesAsA` → IngredientRule[] · `rulesAsB` → IngredientRule[] · `concerns` → IngredientGroupConcern[]
 

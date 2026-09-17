@@ -145,8 +145,11 @@ model ProductIngredient {
 }
 
 model IngredientGroup {
-  id   String @id @default(cuid())
-  name String @unique // 예: "레티노이드류", "AHA류", "BHA류", "PHA류"
+  id                 String     @id @default(cuid())
+  name               String     @unique // 예: "레티노이드류", "AHA류", "BHA류", "PHA류"
+  // 권장 시간대. 값이 있으면 이 그룹을 포함한 제품은 반대 시간대 루틴에 넣지 않는다 (FR-REC-07, 강제). null이면 상관없음
+  preferredTimeOfDay TimeOfDay?
+  timeOfDayReason    String? // 시간대를 정한 사유. 근거 문장 생성에 쓴다 (FR-RSN-02)
 
   ingredients Ingredient[]
   rulesAsA    IngredientRule[]         @relation("RuleGroupA")
