@@ -6,7 +6,7 @@ import { StepProgress } from "@/components/step-progress";
 import { RoutineLevelForm } from "@/components/onboarding/routine-level-form";
 import { isSkinType } from "@/lib/onboarding/skin-types";
 import { parseConcerns, serializeConcerns } from "@/lib/onboarding/concerns";
-import { isRoutineLevel } from "@/lib/onboarding/routine-levels";
+import { parseStepCount } from "@/lib/onboarding/routine-levels";
 
 /**
  * 온보딩 3단계 — 단계 수 선택 (#12).
@@ -26,8 +26,10 @@ export default async function RoutineLevelStepPage(
   const skinType: SkinType = rawSkinType;
   const concerns = parseConcerns(sp.concerns);
 
-  const rawLevel = Array.isArray(sp.level) ? sp.level[0] : sp.level;
-  const defaultLevel = isRoutineLevel(rawLevel) ? rawLevel : undefined;
+  const rawStepCount = Array.isArray(sp.stepCount)
+    ? sp.stepCount[0]
+    : sp.stepCount;
+  const defaultStepCount = parseStepCount(rawStepCount);
 
   // 뒤로가기: 2단계로 돌아가며 그동안 고른 값 유지
   const concernsQuery = serializeConcerns(concerns);
@@ -47,7 +49,7 @@ export default async function RoutineLevelStepPage(
       <RoutineLevelForm
         skinType={skinType}
         concerns={concerns}
-        defaultLevel={defaultLevel}
+        defaultStepCount={defaultStepCount}
       />
     </main>
   );

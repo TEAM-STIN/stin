@@ -67,18 +67,18 @@ describe("ConcernsForm", () => {
 
   it("'다음' → 선택값을 CONCERN_OPTIONS 순서로 정렬해 실어 보낸다", () => {
     render(<ConcernsForm skinType="DRY" />);
-    // 모공 → 트러블 순으로 클릭해도 결과는 ACNE,PORES
+    // 모공 → 트러블 순으로 클릭해도 결과는 TROUBLE,PORE
     fireEvent.click(screen.getByRole("button", { name: "모공" }));
     fireEvent.click(screen.getByRole("button", { name: "트러블" }));
     fireEvent.click(screen.getByRole("button", { name: "다음" }));
 
     expect(push).toHaveBeenCalledWith(
-      "/onboarding/routine-level?skinType=DRY&concerns=ACNE,PORES",
+      "/onboarding/routine-level?skinType=DRY&concerns=TROUBLE,PORE",
     );
   });
 
   it("defaultValues 가 있으면 미리 선택된 상태로 시작한다", () => {
-    render(<ConcernsForm skinType="OILY" defaultValues={["PORES", "AGING"]} />);
+    render(<ConcernsForm skinType="OILY" defaultValues={["PORE", "WRINKLE"]} />);
 
     expect(screen.getByRole("button", { name: "모공" })).toHaveAttribute(
       "aria-pressed",

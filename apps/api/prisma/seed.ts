@@ -541,6 +541,7 @@ const CONCERNS: Concern[] = [
 // ── 루틴 템플릿 ──────────────────────────────────────
 
 // label은 같은 카테고리가 한 템플릿에 두 번 나올 때만 채운다 (4단계 세럼 2종, 요구사항 §4.3).
+// 추천 단계 수는 모든 피부타입에서 3단계로 통일한다 (2026-09-17 결정, 온보딩 3단계 배지).
 const TEMPLATES: Array<{
   stepCount: number;
   recommendedSkinTypes: string[];
@@ -548,12 +549,18 @@ const TEMPLATES: Array<{
 }> = [
   {
     stepCount: 2,
-    recommendedSkinTypes: ['DEHYDRATED_OILY', 'NORMAL'],
+    recommendedSkinTypes: [],
     steps: [{ category: 'TONER' }, { category: 'CREAM' }],
   },
   {
     stepCount: 3,
-    recommendedSkinTypes: ['OILY', 'COMBINATION'],
+    recommendedSkinTypes: [
+      'OILY',
+      'DRY',
+      'COMBINATION',
+      'DEHYDRATED_OILY',
+      'NORMAL',
+    ],
     steps: [
       { category: 'TONER' },
       { category: 'SERUM' },
@@ -562,7 +569,7 @@ const TEMPLATES: Array<{
   },
   {
     stepCount: 4,
-    recommendedSkinTypes: ['DRY'],
+    recommendedSkinTypes: [],
     steps: [
       { category: 'TONER' },
       { category: 'SERUM', label: '가벼운 세럼' },
@@ -641,6 +648,11 @@ async function main() {
       where: { stepCount: t.stepCount },
     });
     if (existing) {
+      // 이미 시드된 DB도 추천 피부타입이 바뀌도록 갱신한다
+      await prisma.routineTemplate.update({
+        where: { id: existing.id },
+        data: { recommendedSkinTypes: t.recommendedSkinTypes as never },
+      });
       // 이미 시드된 DB도 label이 채워지도록 순서·카테고리가 모두 맞는 단계만 갱신한다
       for (const [i, step] of t.steps.entries()) {
         await prisma.routineTemplateStep.updateMany({
