@@ -75,16 +75,19 @@ enum AuthProvider {
 // ── 사용자 ──────────────────────────────────────────
 
 // 소셜 로그인 전용 (FR-AUTH-01·02). 비밀번호를 저장하지 않는다.
+// 탈퇴는 행을 지우지 않고 익명화한다 (요구사항 §10-2): deletedAt 기록, 닉네임 '탈퇴한 사용자',
+// providerId·email·profileImageUrl·skinType 비움, concernTags 비움, 저장 루틴 삭제. 리뷰·리뷰 추천은 유지.
 model User {
   id              String       @id @default(cuid())
   provider        AuthProvider
-  providerId      String // 제공자가 발급한 계정 고유 ID
+  providerId      String? // 제공자가 발급한 계정 고유 ID. 탈퇴 시 비워 같은 계정으로 재가입하면 새 사용자가 된다
   email           String? // 선택 동의로 받은 경우만. 제공자 간 중복 가능해 unique 아님
   nickname        String // 제공자 값으로 초기화, 없으면 기본 닉네임 (FR-AUTH-05)
   profileImageUrl String?
   skinType        SkinType?
   concernTags     ConcernTag[]
   createdAt       DateTime     @default(now())
+  deletedAt       DateTime? // 탈퇴 시각. null이면 활성 사용자
 
   routines              Routine[]
   reviews               Review[]
