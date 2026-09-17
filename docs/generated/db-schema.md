@@ -1,7 +1,7 @@
 # 데이터 모델 요약
 
 <!-- 이 파일은 `pnpm db:schema:doc`이 만든다. 손으로 고치지 말 것. -->
-<!-- schema-hash: cb32c8434a7518fe -->
+<!-- schema-hash: 9672dee9faf47a00 -->
 
 정본은 [`apps/api/prisma/schema.prisma`](../../apps/api/prisma/schema.prisma)다.
 이 문서는 모델·필드·관계만 추린 요약이라, 인덱스나 제약 같은 세부는 원본을 봐야 한다.
@@ -12,7 +12,7 @@
 
 - **SkinType** — `OILY`(지성) · `DRY`(건성) · `COMBINATION`(복합성) · `DEHYDRATED_OILY`(수부지) · `NORMAL`(중성)
 - **ConcernTag** — `TROUBLE`(트러블) · `KERATIN`(각질) · `PORE`(모공) · `REDNESS`(홍조) · `SENSITIVE`(민감) · `WRINKLE`(주름) · `PIGMENTATION`(색소침착)
-- **StepCategory** — `TONER`(토너) · `SERUM`(세럼) · `CREAM`(크림) · `SUNSCREEN`(선크림 (RoutineTemplateStep에는 미포함, Product/RoutineStep에서만 사용))
+- **StepCategory** — `TONER`(토너) · `SERUM`(세럼) · `CREAM`(크림) · `SUNSCREEN`(선크림 (향후 확장용, 현재 미사용 (요구사항 §4.3·§9)))
 - **RuleSeverity** — `BLOCK`(절대 조건 위반 - 조합 자체를 폐기) · `WARN`(완화 가능 - 트레이드오프 처리 대상)
 - **EvidenceLevel** — `ESTABLISHED`(공인 자료 기반) · `COMMON_BELIEF`(업계 통설) · `ANECDOTAL`(사용자 경험 기반)
 - **ConcernEffect** — `HELPS`(해당 고민을 개선·완화) · `AVOID`(해당 고민을 악화시키거나 부적합)

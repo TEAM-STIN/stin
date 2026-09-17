@@ -10,7 +10,12 @@ const prisma = new PrismaClient({ adapter });
 // LHA(캡릴로일살리실산)는 살리실산 유도체라 BHA류에 성분으로 편입.
 
 const INGREDIENTS: Record<string, string[]> = {
-  레티노이드류: ['레티놀', '레티날', '레티닐팔미테이트', '하이드록시피나콜론레티노에이트'],
+  레티노이드류: [
+    '레티놀',
+    '레티날',
+    '레티닐팔미테이트',
+    '하이드록시피나콜론레티노에이트',
+  ],
   AHA류: ['글라이콜릭애씨드', '락틱애씨드', '만델릭애씨드'],
   BHA류: ['살리실산', '캡릴로일살리실산'],
   PHA류: ['글루코노락톤', '락토바이오닉애씨드'],
@@ -41,7 +46,13 @@ const INGREDIENTS: Record<string, string[]> = {
     '미리스틸미리스테이트',
     '라놀린',
   ],
-  '자극 유발 성분': ['변성알코올', '멘톨', '캠퍼', '유칼립투스오일', '페퍼민트오일'],
+  '자극 유발 성분': [
+    '변성알코올',
+    '멘톨',
+    '캠퍼',
+    '유칼립투스오일',
+    '페퍼민트오일',
+  ],
 };
 
 // ── 성분 그룹 병용 규칙 ──────────────────────────────
@@ -60,7 +71,8 @@ const RULES: Rule[] = [
     b: 'AHA류',
     severity: 'BLOCK',
     evidenceLevel: 'ESTABLISHED',
-    description: '레티노이드와 AHA를 함께 쓰면 피부 장벽 손상과 자극 위험이 커집니다.',
+    description:
+      '레티노이드와 AHA를 함께 쓰면 피부 장벽 손상과 자극 위험이 커집니다.',
   },
   {
     a: '레티노이드류',
@@ -125,7 +137,14 @@ const RULES: Rule[] = [
 
 type Concern = {
   group: string;
-  tag: 'TROUBLE' | 'KERATIN' | 'PORE' | 'REDNESS' | 'SENSITIVE' | 'WRINKLE' | 'PIGMENTATION';
+  tag:
+    | 'TROUBLE'
+    | 'KERATIN'
+    | 'PORE'
+    | 'REDNESS'
+    | 'SENSITIVE'
+    | 'WRINKLE'
+    | 'PIGMENTATION';
   effect: 'HELPS' | 'AVOID';
   evidenceLevel: 'ESTABLISHED' | 'COMMON_BELIEF' | 'ANECDOTAL';
   weight: number;
@@ -140,7 +159,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'ESTABLISHED',
     weight: 100,
-    description: '레티노이드는 콜라겐 생성을 촉진하고 광노화를 개선해 주름 개선 근거가 가장 강합니다.',
+    description:
+      '레티노이드는 콜라겐 생성을 촉진하고 광노화를 개선해 주름 개선 근거가 가장 강합니다.',
   },
   {
     group: '레티노이드류',
@@ -156,7 +176,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'ESTABLISHED',
     weight: 90,
-    description: '레티노이드는 각질 축적을 줄이고 모공 벽 탄력을 높여 모공을 덜 도드라지게 합니다.',
+    description:
+      '레티노이드는 각질 축적을 줄이고 모공 벽 탄력을 높여 모공을 덜 도드라지게 합니다.',
   },
   {
     group: '레티노이드류',
@@ -164,7 +185,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 60,
-    description: '레티노이드는 턴오버로 색소 배출을 돕고 다른 미백 성분의 침투를 보조합니다.',
+    description:
+      '레티노이드는 턴오버로 색소 배출을 돕고 다른 미백 성분의 침투를 보조합니다.',
   },
   {
     group: '레티노이드류',
@@ -172,7 +194,8 @@ const CONCERNS: Concern[] = [
     effect: 'AVOID',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 0,
-    description: '레티노이드는 초기 자극(레티노이드 피부염) 위험이 있어 민감성 피부에는 권장하지 않습니다.',
+    description:
+      '레티노이드는 초기 자극(레티노이드 피부염) 위험이 있어 민감성 피부에는 권장하지 않습니다.',
   },
 
   // AHA류
@@ -182,7 +205,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'ESTABLISHED',
     weight: 100,
-    description: 'AHA는 각질세포 간 결합을 분해해 표면 각질을 탈락시키고 피부결·톤을 개선합니다.',
+    description:
+      'AHA는 각질세포 간 결합을 분해해 표면 각질을 탈락시키고 피부결·톤을 개선합니다.',
   },
   {
     group: 'AHA류',
@@ -214,7 +238,8 @@ const CONCERNS: Concern[] = [
     effect: 'AVOID',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 0,
-    description: '고농도 AHA는 따가움·홍조 등 자극 위험이 있어 민감성 피부에는 권장하지 않습니다.',
+    description:
+      '고농도 AHA는 따가움·홍조 등 자극 위험이 있어 민감성 피부에는 권장하지 않습니다.',
   },
   {
     group: 'AHA류',
@@ -241,7 +266,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'ESTABLISHED',
     weight: 95,
-    description: 'BHA는 모공 내부의 피지·각질을 제거해 블랙헤드와 모공 막힘을 개선합니다.',
+    description:
+      'BHA는 모공 내부의 피지·각질을 제거해 블랙헤드와 모공 막힘을 개선합니다.',
   },
   {
     group: 'BHA류',
@@ -257,7 +283,8 @@ const CONCERNS: Concern[] = [
     effect: 'AVOID',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 0,
-    description: '고농도 BHA는 건조·자극을 유발할 수 있어 민감성 피부에는 신중해야 합니다.',
+    description:
+      '고농도 BHA는 건조·자극을 유발할 수 있어 민감성 피부에는 신중해야 합니다.',
   },
 
   // PHA류
@@ -276,7 +303,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 40,
-    description: 'PHA는 보습력이 있고 자극이 적어 민감성 피부의 순한 각질제거제로 쓰입니다.',
+    description:
+      'PHA는 보습력이 있고 자극이 적어 민감성 피부의 순한 각질제거제로 쓰입니다.',
   },
 
   // 고농도 비타민C
@@ -304,7 +332,8 @@ const CONCERNS: Concern[] = [
     effect: 'AVOID',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 0,
-    description: '고농도 비타민C는 낮은 pH로 인해 홍조·자극을 유발할 수 있습니다.',
+    description:
+      '고농도 비타민C는 낮은 pH로 인해 홍조·자극을 유발할 수 있습니다.',
   },
   {
     group: '고농도 비타민C',
@@ -312,7 +341,8 @@ const CONCERNS: Concern[] = [
     effect: 'AVOID',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 0,
-    description: '고농도 비타민C는 따가움과 자극 위험이 있어 민감성 피부에는 권장하지 않습니다.',
+    description:
+      '고농도 비타민C는 따가움과 자극 위험이 있어 민감성 피부에는 권장하지 않습니다.',
   },
 
   // 나이아신아마이드
@@ -322,7 +352,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'ESTABLISHED',
     weight: 90,
-    description: '나이아신아마이드는 피지 분비를 조절하고 항염 작용으로 트러블을 완화합니다.',
+    description:
+      '나이아신아마이드는 피지 분비를 조절하고 항염 작용으로 트러블을 완화합니다.',
   },
   {
     group: '나이아신아마이드',
@@ -330,7 +361,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'ESTABLISHED',
     weight: 85,
-    description: '나이아신아마이드는 피지 분비를 줄여 모공 외관을 개선하는 임상 근거가 있습니다.',
+    description:
+      '나이아신아마이드는 피지 분비를 줄여 모공 외관을 개선하는 임상 근거가 있습니다.',
   },
   {
     group: '나이아신아마이드',
@@ -347,7 +379,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 60,
-    description: '나이아신아마이드는 염증 반응을 완화하고 장벽을 강화해 홍조를 줄입니다.',
+    description:
+      '나이아신아마이드는 염증 반응을 완화하고 장벽을 강화해 홍조를 줄입니다.',
   },
   {
     group: '나이아신아마이드',
@@ -364,7 +397,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 45,
-    description: '나이아신아마이드는 잔주름과 탄력 개선이 보고된 다기능 성분입니다.',
+    description:
+      '나이아신아마이드는 잔주름과 탄력 개선이 보고된 다기능 성분입니다.',
   },
 
   // 아젤라익애씨드
@@ -383,7 +417,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'ESTABLISHED',
     weight: 85,
-    description: '아젤라익애씨드는 주사(rosacea)와 홍조 개선에 대한 임상 근거가 강합니다.',
+    description:
+      '아젤라익애씨드는 주사(rosacea)와 홍조 개선에 대한 임상 근거가 강합니다.',
   },
   {
     group: '아젤라익애씨드',
@@ -391,7 +426,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 70,
-    description: '아젤라익애씨드는 티로시나제를 억제하고 염증후색소침착(PIH)을 개선합니다.',
+    description:
+      '아젤라익애씨드는 티로시나제를 억제하고 염증후색소침착(PIH)을 개선합니다.',
   },
   {
     group: '아젤라익애씨드',
@@ -399,7 +435,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 50,
-    description: '아젤라익애씨드는 각질과 피지를 정리해 모공 관리에 보조적으로 도움이 됩니다.',
+    description:
+      '아젤라익애씨드는 각질과 피지를 정리해 모공 관리에 보조적으로 도움이 됩니다.',
   },
 
   // 트라넥삼산
@@ -420,7 +457,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'ESTABLISHED',
     weight: 100,
-    description: '세라마이드·판테놀 등 장벽 성분은 손상된 피부 장벽을 복구해 자극 반응을 줄입니다.',
+    description:
+      '세라마이드·판테놀 등 장벽 성분은 손상된 피부 장벽을 복구해 자극 반응을 줄입니다.',
   },
   {
     group: '진정·장벽 성분',
@@ -428,7 +466,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 70,
-    description: '센텔라·비사보롤 등 진정 성분은 염증과 혈관 반응을 완화해 홍조를 줄입니다.',
+    description:
+      '센텔라·비사보롤 등 진정 성분은 염증과 혈관 반응을 완화해 홍조를 줄입니다.',
   },
   {
     group: '진정·장벽 성분',
@@ -436,7 +475,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 25,
-    description: '트러블 관리 중 장벽·진정 성분을 함께 쓰면 활성 성분의 자극을 완화합니다.',
+    description:
+      '트러블 관리 중 장벽·진정 성분을 함께 쓰면 활성 성분의 자극을 완화합니다.',
   },
   {
     group: '진정·장벽 성분',
@@ -444,7 +484,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 25,
-    description: '각질제거 후 장벽 성분을 보충하면 자극과 건조를 줄일 수 있습니다.',
+    description:
+      '각질제거 후 장벽 성분을 보충하면 자극과 건조를 줄일 수 있습니다.',
   },
   {
     group: '진정·장벽 성분',
@@ -452,7 +493,8 @@ const CONCERNS: Concern[] = [
     effect: 'HELPS',
     evidenceLevel: 'COMMON_BELIEF',
     weight: 25,
-    description: '레티노이드 사용 시 장벽 성분을 병행하면 자극을 완화할 수 있습니다.',
+    description:
+      '레티노이드 사용 시 장벽 성분을 병행하면 자극을 완화할 수 있습니다.',
   },
 
   // 코메도제닉 오일·에스터 (AVOID 전용)
@@ -471,7 +513,8 @@ const CONCERNS: Concern[] = [
     effect: 'AVOID',
     evidenceLevel: 'ESTABLISHED',
     weight: 0,
-    description: '코메도제닉 오일·에스터는 모공 막힘을 유발해 모공을 더 도드라지게 할 수 있습니다.',
+    description:
+      '코메도제닉 오일·에스터는 모공 막힘을 유발해 모공을 더 도드라지게 할 수 있습니다.',
   },
 
   // 자극 유발 성분 (AVOID 전용)
@@ -481,7 +524,8 @@ const CONCERNS: Concern[] = [
     effect: 'AVOID',
     evidenceLevel: 'ESTABLISHED',
     weight: 0,
-    description: '향료·변성알코올·멘톨 등은 민감성 피부에 따가움과 자극을 유발합니다.',
+    description:
+      '향료·변성알코올·멘톨 등은 민감성 피부에 따가움과 자극을 유발합니다.',
   },
   {
     group: '자극 유발 성분',
@@ -489,16 +533,43 @@ const CONCERNS: Concern[] = [
     effect: 'AVOID',
     evidenceLevel: 'ESTABLISHED',
     weight: 0,
-    description: '멘톨·캠퍼·에센셜오일 등 청량감·향 성분은 혈관을 자극해 홍조를 악화시킵니다.',
+    description:
+      '멘톨·캠퍼·에센셜오일 등 청량감·향 성분은 혈관을 자극해 홍조를 악화시킵니다.',
   },
 ];
 
 // ── 루틴 템플릿 ──────────────────────────────────────
 
-const TEMPLATES: Array<{ stepCount: number; recommendedSkinTypes: string[]; steps: string[] }> = [
-  { stepCount: 2, recommendedSkinTypes: ['DEHYDRATED_OILY', 'NORMAL'], steps: ['TONER', 'CREAM'] },
-  { stepCount: 3, recommendedSkinTypes: ['OILY', 'COMBINATION'], steps: ['TONER', 'SERUM', 'CREAM'] },
-  { stepCount: 4, recommendedSkinTypes: ['DRY'], steps: ['TONER', 'SERUM', 'SERUM', 'CREAM'] },
+// label은 같은 카테고리가 한 템플릿에 두 번 나올 때만 채운다 (4단계 세럼 2종, 요구사항 §4.3).
+const TEMPLATES: Array<{
+  stepCount: number;
+  recommendedSkinTypes: string[];
+  steps: Array<{ category: string; label?: string }>;
+}> = [
+  {
+    stepCount: 2,
+    recommendedSkinTypes: ['DEHYDRATED_OILY', 'NORMAL'],
+    steps: [{ category: 'TONER' }, { category: 'CREAM' }],
+  },
+  {
+    stepCount: 3,
+    recommendedSkinTypes: ['OILY', 'COMBINATION'],
+    steps: [
+      { category: 'TONER' },
+      { category: 'SERUM' },
+      { category: 'CREAM' },
+    ],
+  },
+  {
+    stepCount: 4,
+    recommendedSkinTypes: ['DRY'],
+    steps: [
+      { category: 'TONER' },
+      { category: 'SERUM', label: '가벼운 세럼' },
+      { category: 'SERUM', label: '고농축 세럼' },
+      { category: 'CREAM' },
+    ],
+  },
 ];
 
 async function main() {
@@ -566,15 +637,34 @@ async function main() {
 
   // 루틴 템플릿
   for (const t of TEMPLATES) {
-    const existing = await prisma.routineTemplate.findFirst({ where: { stepCount: t.stepCount } });
-    if (existing) continue;
+    const existing = await prisma.routineTemplate.findFirst({
+      where: { stepCount: t.stepCount },
+    });
+    if (existing) {
+      // 이미 시드된 DB도 label이 채워지도록 순서·카테고리가 모두 맞는 단계만 갱신한다
+      for (const [i, step] of t.steps.entries()) {
+        await prisma.routineTemplateStep.updateMany({
+          where: {
+            templateId: existing.id,
+            order: i + 1,
+            category: step.category as never,
+          },
+          data: { label: step.label ?? null },
+        });
+      }
+      continue;
+    }
 
     await prisma.routineTemplate.create({
       data: {
         stepCount: t.stepCount,
         recommendedSkinTypes: t.recommendedSkinTypes as never,
         steps: {
-          create: t.steps.map((category, i) => ({ order: i + 1, category: category as never })),
+          create: t.steps.map((step, i) => ({
+            order: i + 1,
+            category: step.category as never,
+            label: step.label ?? null,
+          })),
         },
       },
     });
