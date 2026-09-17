@@ -20,7 +20,7 @@ describe("RoutineLevelForm", () => {
     expect(screen.getByRole("button", { name: /4단계/ })).toBeInTheDocument();
   });
 
-  it("피부타입 추천 레벨이 기본 선택되고 배지가 뜬다", () => {
+  it("피부타입 추천 단계 수가 기본 선택되고 배지가 뜬다", () => {
     render(<RoutineLevelForm skinType="OILY" concerns={[]} />);
     expect(screen.getByRole("button", { name: /3단계/ })).toHaveAttribute(
       "aria-pressed",
@@ -48,29 +48,29 @@ describe("RoutineLevelForm", () => {
     expect(screen.queryByRole("switch")).not.toBeInTheDocument();
   });
 
-  it("'루틴 추천받기' → skinType·level 을 실어 결과 화면으로", () => {
+  it("'루틴 추천받기' → skinType·stepCount 를 실어 결과 화면으로", () => {
     render(<RoutineLevelForm skinType="OILY" concerns={[]} />);
     fireEvent.click(screen.getByRole("button", { name: "루틴 추천받기" }));
 
-    expect(push).toHaveBeenCalledWith("/routine?skinType=OILY&level=LEVEL_3");
+    expect(push).toHaveBeenCalledWith("/routine?skinType=OILY&stepCount=3");
   });
 
-  it("고민·레벨 변경이 쿼리에 반영된다", () => {
-    render(<RoutineLevelForm skinType="DRY" concerns={["PORES", "ACNE"]} />);
+  it("고민·단계 수 변경이 쿼리에 반영된다", () => {
+    render(<RoutineLevelForm skinType="DRY" concerns={["PORE", "TROUBLE"]} />);
     fireEvent.click(screen.getByRole("button", { name: /2단계/ }));
     fireEvent.click(screen.getByRole("button", { name: "루틴 추천받기" }));
 
     expect(push).toHaveBeenCalledWith(
-      "/routine?skinType=DRY&concerns=ACNE,PORES&level=LEVEL_2",
+      "/routine?skinType=DRY&concerns=TROUBLE,PORE&stepCount=2",
     );
   });
 
-  it("defaultLevel 로 복원된다", () => {
+  it("defaultStepCount 로 복원된다", () => {
     render(
       <RoutineLevelForm
         skinType="OILY"
         concerns={[]}
-        defaultLevel="LEVEL_4"
+        defaultStepCount={4}
       />,
     );
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Concern, RoutineLevel, SkinType } from "@stin/types";
+import type { ConcernTag, SkinType, StepCount } from "@stin/types";
 
 import { Button } from "@/components/ui/button";
 import { SelectCard } from "@/components/select-card";
@@ -11,15 +11,15 @@ import { serializeConcerns } from "@/lib/onboarding/concerns";
 import { skinTypeLabel } from "@/lib/onboarding/skin-types";
 import {
   ROUTINE_LEVEL_OPTIONS,
-  recommendedLevelFor,
+  recommendedStepCountFor,
 } from "@/lib/onboarding/routine-levels";
 
 interface RoutineLevelFormProps {
   skinType: SkinType;
   /** 앞 단계에서 넘어온 고민. 결과 화면으로 계속 실어 보낸다. */
-  concerns: Concern[];
+  concerns: ConcernTag[];
   /** 뒤로 돌아왔을 때 복원할 값 */
-  defaultLevel?: RoutineLevel;
+  defaultStepCount?: StepCount;
 }
 
 /**
@@ -31,17 +31,19 @@ interface RoutineLevelFormProps {
 export function RoutineLevelForm({
   skinType,
   concerns,
-  defaultLevel,
+  defaultStepCount,
 }: RoutineLevelFormProps) {
   const router = useRouter();
-  const recommended = recommendedLevelFor(skinType);
-  const [level, setLevel] = useState<RoutineLevel>(defaultLevel ?? recommended);
+  const recommended = recommendedStepCountFor(skinType);
+  const [stepCount, setStepCount] = useState<StepCount>(
+    defaultStepCount ?? recommended,
+  );
 
   function handleSubmit() {
     let query = `?skinType=${skinType}`;
     const serialized = serializeConcerns(concerns);
     if (serialized) query += `&concerns=${serialized}`;
-    query += `&level=${level}`;
+    query += `&stepCount=${stepCount}`;
     router.push(`/routine${query}`);
   }
 
@@ -49,12 +51,12 @@ export function RoutineLevelForm({
     <div className="flex flex-1 flex-col">
       <div className="mt-7 flex flex-col gap-6 px-6">
         {ROUTINE_LEVEL_OPTIONS.map((option) => {
-          const isSelected = level === option.value;
+          const isSelected = stepCount === option.value;
           return (
             <SelectCard
               key={option.value}
               selected={isSelected}
-              onClick={() => setLevel(option.value)}
+              onClick={() => setStepCount(option.value)}
               badge={
                 option.value === recommended
                   ? `${skinTypeLabel(skinType)} 피부에 추천`

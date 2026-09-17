@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Concern, SkinType } from "@stin/types";
+import type { ConcernTag, SkinType } from "@stin/types";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ interface ConcernsFormProps {
   /** 1단계에서 넘어온 피부타입. 3단계로 계속 실어 보낸다. */
   skinType: SkinType;
   /** 뒤로 돌아왔을 때 복원할 이전 선택값 */
-  defaultValues?: Concern[];
+  defaultValues?: ConcernTag[];
 }
 
 /**
@@ -24,9 +24,9 @@ interface ConcernsFormProps {
  */
 export function ConcernsForm({ skinType, defaultValues }: ConcernsFormProps) {
   const router = useRouter();
-  const [selected, setSelected] = useState<Concern[]>(defaultValues ?? []);
+  const [selected, setSelected] = useState<ConcernTag[]>(defaultValues ?? []);
 
-  function toggle(value: Concern) {
+  function toggle(value: ConcernTag) {
     setSelected((prev) =>
       prev.includes(value)
         ? prev.filter((v) => v !== value)
