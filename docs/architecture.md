@@ -76,6 +76,15 @@ Postgres unique는 null끼리 충돌하지 않아 `(provider, providerId)` 제�
 계약에서만 다른 것(평가 요약 수치, `isMine` 같은 요청자 기준 값, 현재 미사용인 `SUNSCREEN` 제외)만 따로 정의한다.
 단계 수도 `LEVEL_2` 같은 문자열 대신 스키마의 `stepCount`와 같은 숫자 `2 | 3 | 4`를 쓴다.
 
+### 왜 성분 그룹의 아침/저녁을 Boolean이 아니라 권장 시간대 + 사유로 뒀는가
+FR-REC-07을 지키려면 성분 그룹마다 시간대 정보가 필요하다. 요구사항 초안은 `isPhotosensitive`·`isIrritant`
+Boolean으로 "저녁에 둘 이유"를 표시하자고 했지만, 고농도 비타민C처럼 자극 성분이면서 아침이 권장되는
+그룹을 표현할 수 없었다. 그래서 방향(`preferredTimeOfDay`)과 사용자에게 보여줄 사유 문장(`timeOfDayReason`)을
+따로 둔다. 사유를 enum이 아닌 문장으로 둔 건 `IngredientGroupConcern.description`·`IngredientRule.description`과 같이
+근거 문장 생성(FR-RSN-02)에 그대로 쓰기 위해서다. 규칙을 그룹 이름 하드코딩이 아니라 데이터에 둔 건
+기능군 단위로 규칙을 건다는 원칙(golden-rules 4번)과 같은 이유다.
+엔진은 이 값을 **강제**로 쓴다(감점 아님). 시간대가 있는 그룹을 포함한 제품은 반대 시간대 후보에서 빠진다.
+
 <!-- 결정마다 한 항목씩 추가. 예:
 
 ### 왜 성분 병용 규칙을 개별 성분이 아닌 기능군 단위로 뒀는가
