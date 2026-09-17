@@ -1,7 +1,7 @@
 # 데이터 모델 요약
 
 <!-- 이 파일은 `pnpm db:schema:doc`이 만든다. 손으로 고치지 말 것. -->
-<!-- schema-hash: 7730597e10dde07b -->
+<!-- schema-hash: 07d33c369028f1ac -->
 
 정본은 [`apps/api/prisma/schema.prisma`](../../apps/api/prisma/schema.prisma)다.
 이 문서는 모델·필드·관계만 추린 요약이라, 인덱스나 제약 같은 세부는 원본을 봐야 한다.
@@ -29,13 +29,14 @@
 |---|---|---|
 | `id` | `String` @id @default(cuid()) |  |
 | `provider` | `AuthProvider` |  |
-| `providerId` | `String` | 제공자가 발급한 계정 고유 ID |
+| `providerId` | `String?` | 제공자가 발급한 계정 고유 ID. 탈퇴 시 비워 같은 계정으로 재가입하면 새 사용자가 된다 |
 | `email` | `String?` | 선택 동의로 받은 경우만. 제공자 간 중복 가능해 unique 아님 |
 | `nickname` | `String` | 제공자 값으로 초기화, 없으면 기본 닉네임 (FR-AUTH-05) |
 | `profileImageUrl` | `String?` |  |
 | `skinType` | `SkinType?` |  |
 | `concernTags` | `ConcernTag[]` |  |
 | `createdAt` | `DateTime` @default(now()) |  |
+| `deletedAt` | `DateTime?` | 탈퇴 시각. null이면 활성 사용자 |
 
 관계: `routines` → Routine[] · `reviews` → Review[] · `reviewRecommendations` → ReviewRecommendation[]
 
